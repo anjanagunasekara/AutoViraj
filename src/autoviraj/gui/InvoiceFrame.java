@@ -5,13 +5,22 @@
  */
 package autoviraj.gui;
 
+import autoviraj.models.Customer;
+import autoviraj.models.Invoice;
 import autoviraj.models.Item;
 import autoviraj.models.ItemCodeGenerator;
 import autoviraj.models.Service;
+import autoviraj.models.Vehicle;
 import java.awt.event.KeyEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -33,7 +42,26 @@ public class InvoiceFrame extends javax.swing.JFrame {
      */
     public InvoiceFrame() {
         initComponents();
+        try {
+            ItemCodeGenerator.createItemMap();
+            ItemCodeGenerator.createServiceMap();
+            itemMap = ItemCodeGenerator.getItemMap();
+            serviceMap = ItemCodeGenerator.getServiceMap();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         datePicker.setDate(new Date());
+        this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent we) {
+                String ObjButtons[] = {"Yes", "No"};
+                int PromptResult = JOptionPane.showOptionDialog(null, "Are you sure you want to exit?", "AutoViraj", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, ObjButtons, ObjButtons[1]);
+                if (PromptResult == JOptionPane.YES_OPTION) {
+                    InvoiceFrame.this.dispose();
+                }
+            }
+        });
     }
 
     /**
@@ -65,7 +93,7 @@ public class InvoiceFrame extends javax.swing.JFrame {
         jLabel6 = new javax.swing.JLabel();
         newCustBtn = new javax.swing.JButton();
         jLabel7 = new javax.swing.JLabel();
-        customerCodeTxt1 = new javax.swing.JTextField();
+        customerTelTxt = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
         itemTabel = new javax.swing.JTable();
         jSeparator3 = new javax.swing.JSeparator();
@@ -92,10 +120,16 @@ public class InvoiceFrame extends javax.swing.JFrame {
         datePicker = new org.jdesktop.swingx.JXDatePicker();
         jScrollPane2 = new javax.swing.JScrollPane();
         serviceTabel = new javax.swing.JTable();
+        jLabel15 = new javax.swing.JLabel();
+        jLabel16 = new javax.swing.JLabel();
+        odometerTxt = new javax.swing.JTextField();
+        nextServiceTxt = new javax.swing.JTextField();
+        jSeparator6 = new javax.swing.JSeparator();
+        resetBtn = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setMinimumSize(new java.awt.Dimension(100, 771));
-        setPreferredSize(new java.awt.Dimension(923, 810));
+        setPreferredSize(new java.awt.Dimension(975, 810));
 
         invoiceNoLbl.setText(" Invoice Number : ");
 
@@ -164,12 +198,22 @@ public class InvoiceFrame extends javax.swing.JFrame {
 
         addBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/add.png"))); // NOI18N
         addBtn.setText("Add");
+        addBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addBtnActionPerformed(evt);
+            }
+        });
 
         prviewBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/preview.png"))); // NOI18N
         prviewBtn.setText("Preview");
 
         saveBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/save.png"))); // NOI18N
         saveBtn.setText("Save");
+        saveBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                saveBtnActionPerformed(evt);
+            }
+        });
 
         delBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/delete.png"))); // NOI18N
         delBtn.setText("Delete");
@@ -234,6 +278,32 @@ public class InvoiceFrame extends javax.swing.JFrame {
             serviceTabel.getColumnModel().getColumn(0).setPreferredWidth(750);
         }
 
+        jLabel15.setText("Next service :");
+
+        jLabel16.setText("Odometer    :");
+
+        odometerTxt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                odometerTxtActionPerformed(evt);
+            }
+        });
+
+        nextServiceTxt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                nextServiceTxtActionPerformed(evt);
+            }
+        });
+
+        jSeparator6.setOrientation(javax.swing.SwingConstants.VERTICAL);
+
+        resetBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/refresh.png"))); // NOI18N
+        resetBtn.setText("Reset");
+        resetBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                resetBtnActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout mainPanelLayout = new javax.swing.GroupLayout(mainPanel);
         mainPanel.setLayout(mainPanelLayout);
         mainPanelLayout.setHorizontalGroup(
@@ -251,9 +321,12 @@ public class InvoiceFrame extends javax.swing.JFrame {
                         .addComponent(datePicker, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(6, 6, 6))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, mainPanelLayout.createSequentialGroup()
-                        .addContainerGap(187, Short.MAX_VALUE)
+                        .addContainerGap()
                         .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, mainPanelLayout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addComponent(resetBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
                                 .addComponent(addBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
                                 .addComponent(delBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -263,6 +336,16 @@ public class InvoiceFrame extends javax.swing.JFrame {
                                 .addComponent(prviewBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(6, 6, 6))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, mainPanelLayout.createSequentialGroup()
+                                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel15)
+                                    .addComponent(jLabel16))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(odometerTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 58, Short.MAX_VALUE)
+                                    .addComponent(nextServiceTxt))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jSeparator6, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(35, 35, 35)
                                 .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                     .addComponent(jLabel13)
                                     .addComponent(jLabel14))
@@ -330,7 +413,7 @@ public class InvoiceFrame extends javax.swing.JFrame {
                                         .addGap(7, 7, 7))
                                     .addGroup(mainPanelLayout.createSequentialGroup()
                                         .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                            .addComponent(customerCodeTxt1, javax.swing.GroupLayout.DEFAULT_SIZE, 156, Short.MAX_VALUE)
+                                            .addComponent(customerTelTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 156, Short.MAX_VALUE)
                                             .addComponent(customerCodeTxt))
                                         .addGap(67, 67, 67)
                                         .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -376,7 +459,7 @@ public class InvoiceFrame extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel7)
-                    .addComponent(customerCodeTxt1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(customerTelTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -386,25 +469,36 @@ public class InvoiceFrame extends javax.swing.JFrame {
                 .addGap(10, 10, 10)
                 .addComponent(jSeparator5, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(9, 9, 9)
-                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(serviceTotalTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel8)
-                    .addComponent(serviceDiscountAmnt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel11)
-                    .addComponent(serviceDiscount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel13))
-                .addGap(4, 4, 4)
-                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(matTotalTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel9)
-                    .addComponent(matDiscountAmnt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel12)
-                    .addComponent(matDiscount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel14))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(grandTotalTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel10))
+                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jSeparator6, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(mainPanelLayout.createSequentialGroup()
+                        .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(serviceTotalTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel8)
+                            .addComponent(serviceDiscountAmnt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel11)
+                            .addComponent(serviceDiscount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel13))
+                        .addGap(4, 4, 4)
+                        .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(matTotalTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel9)
+                            .addComponent(matDiscountAmnt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel12)
+                            .addComponent(matDiscount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel14))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(grandTotalTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel10)))
+                    .addGroup(mainPanelLayout.createSequentialGroup()
+                        .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(odometerTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel16))
+                        .addGap(4, 4, 4)
+                        .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(nextServiceTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel15))))
                 .addGap(18, 18, 18)
                 .addComponent(jSeparator4, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -412,7 +506,8 @@ public class InvoiceFrame extends javax.swing.JFrame {
                     .addComponent(addBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(prviewBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(saveBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(delBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(delBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(resetBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(16, 16, 16))
         );
 
@@ -457,14 +552,14 @@ public class InvoiceFrame extends javax.swing.JFrame {
             for (int i = 0; i < itemTabel.getRowCount(); i++) {
                 double rowTotal = 0;
                 try {
-                    rowTotal = Double.parseDouble(itemTabel.getModel().getValueAt(i, 1).toString()) * Double.parseDouble(itemTabel.getModel().getValueAt(i, 2).toString());   
+                    rowTotal = Double.parseDouble(itemTabel.getModel().getValueAt(i, 1).toString()) * Double.parseDouble(itemTabel.getModel().getValueAt(i, 2).toString());
                     itemTotal += rowTotal;
                 } catch (Exception e) {
                 }
                 itemTabel.getModel().setValueAt(rowTotal, i, 3);
             }
-            matTotalTxt.setText((itemTotal-itemTotal*itemDiscount)  + "");
-            matDiscountAmnt.setText((itemDiscount)*itemTotal+"");
+            matTotalTxt.setText((itemTotal - itemTotal * itemDiscount) + "");
+            matDiscountAmnt.setText((itemDiscount) * itemTotal + "");
             double serviceFinal = 0;
             double itemFinal = 0;
             try {
@@ -475,7 +570,7 @@ public class InvoiceFrame extends javax.swing.JFrame {
                 itemFinal = Double.parseDouble(matTotalTxt.getText());
             } catch (Exception e) {
             }
-            grandTotalTxt.setText(serviceFinal + itemFinal +"");
+            grandTotalTxt.setText(serviceFinal + itemFinal + "");
         }
     }//GEN-LAST:event_itemTabelKeyReleased
 
@@ -500,14 +595,14 @@ public class InvoiceFrame extends javax.swing.JFrame {
             for (int i = 0; i < serviceTabel.getRowCount(); i++) {
                 double rowTotal = 0;
                 try {
-                    rowTotal = Double.parseDouble(serviceTabel.getModel().getValueAt(i, 1).toString());   
+                    rowTotal = Double.parseDouble(serviceTabel.getModel().getValueAt(i, 1).toString());
                     serviceTotal += rowTotal;
                 } catch (Exception e) {
                 }
                 serviceTabel.getModel().setValueAt(rowTotal, i, 1);
             }
-            serviceTotalTxt.setText((serviceTotal-serviceTotal*serviceDiscountA) + "");
-            serviceDiscountAmnt.setText(serviceDiscountA*serviceTotal+"");
+            serviceTotalTxt.setText((serviceTotal - serviceTotal * serviceDiscountA) + "");
+            serviceDiscountAmnt.setText(serviceDiscountA * serviceTotal + "");
             double serviceFinal = 0;
             double itemFinal = 0;
             try {
@@ -518,7 +613,7 @@ public class InvoiceFrame extends javax.swing.JFrame {
                 itemFinal = Double.parseDouble(matTotalTxt.getText());
             } catch (Exception e) {
             }
-            grandTotalTxt.setText(serviceFinal + itemFinal +"");
+            grandTotalTxt.setText(serviceFinal + itemFinal + "");
         }
     }//GEN-LAST:event_serviceTabelKeyReleased
 
@@ -526,9 +621,9 @@ public class InvoiceFrame extends javax.swing.JFrame {
         double discount = 0.0;
         try {
             discount = Double.parseDouble(serviceDiscount.getText());
-            serviceDiscountA = discount/100;
-            serviceDiscountAmnt.setText((discount/100)*serviceTotal+"");
-            serviceTotalTxt.setText(serviceTotal-serviceDiscountA*serviceTotal+"");
+            serviceDiscountA = discount / 100;
+            serviceDiscountAmnt.setText((discount / 100) * serviceTotal + "");
+            serviceTotalTxt.setText(serviceTotal - serviceDiscountA * serviceTotal + "");
             double serviceFinal = 0;
             double itemFinal = 0;
             try {
@@ -539,7 +634,7 @@ public class InvoiceFrame extends javax.swing.JFrame {
                 itemFinal = Double.parseDouble(matTotalTxt.getText());
             } catch (Exception e) {
             }
-            grandTotalTxt.setText(serviceFinal + itemFinal +"");
+            grandTotalTxt.setText(serviceFinal + itemFinal + "");
         } catch (Exception e) {
         }
     }//GEN-LAST:event_serviceDiscountActionPerformed
@@ -548,9 +643,9 @@ public class InvoiceFrame extends javax.swing.JFrame {
         double discount = 0.0;
         try {
             discount = Double.parseDouble(matDiscount.getText());
-            itemDiscount = discount/100;
-            matDiscountAmnt.setText((discount/100)*itemTotal+"");
-            matTotalTxt.setText(itemTotal-itemDiscount*itemTotal+"");
+            itemDiscount = discount / 100;
+            matDiscountAmnt.setText((discount / 100) * itemTotal + "");
+            matTotalTxt.setText(itemTotal - itemDiscount * itemTotal + "");
             double serviceFinal = 0;
             double itemFinal = 0;
             try {
@@ -561,10 +656,66 @@ public class InvoiceFrame extends javax.swing.JFrame {
                 itemFinal = Double.parseDouble(matTotalTxt.getText());
             } catch (Exception e) {
             }
-            grandTotalTxt.setText(serviceFinal + itemFinal +"");
+            grandTotalTxt.setText(serviceFinal + itemFinal + "");
         } catch (Exception e) {
         }
     }//GEN-LAST:event_matDiscountActionPerformed
+
+    private void addBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addBtnActionPerformed
+        Customer c = new Customer(customerNameTxt.getText(), "", customerTelTxt.getText());
+        Vehicle v = new Vehicle(vehicleNoTxt.getText(), odometerTxt.getSelectedText(), c, vehicleTypeTxt.getText(), "");
+        List<Item> itemList = new ArrayList<>();
+        List<Service> serviceList = new ArrayList<>();
+        for (Item i : itemMap.values()) {
+            itemList.add(i);
+        }
+        for (Service s : serviceMap.values()) {
+            serviceList.add(s);
+        }
+        Invoice i = new Invoice(invoiceNoTxt.getText(), itemList, serviceList, v, grandTotal, itemTotal, serviceTotal, itemDiscount, serviceDiscountA, odometerTxt.getText(), datePicker.getDate().toString());
+        if (false) {
+            JOptionPane.showMessageDialog(null, "Invoice is dispatched to print", "", JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(null, "Error occured!", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_addBtnActionPerformed
+
+    private void odometerTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_odometerTxtActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_odometerTxtActionPerformed
+
+    private void nextServiceTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nextServiceTxtActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_nextServiceTxtActionPerformed
+
+    private void saveBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveBtnActionPerformed
+        Customer c = new Customer(customerNameTxt.getText(), "", customerTelTxt.getText());
+        Vehicle v = new Vehicle(vehicleNoTxt.getText(), odometerTxt.getSelectedText(), c, vehicleTypeTxt.getText(), "");
+        List<Item> itemList = new ArrayList<>();
+        List<Service> serviceList = new ArrayList<>();
+        for (Item i : itemMap.values()) {
+            itemList.add(i);
+        }
+        for (Service s : serviceMap.values()) {
+            serviceList.add(s);
+        }
+        Invoice i = new Invoice(invoiceNoTxt.getText(), itemList, serviceList, v, grandTotal, itemTotal, serviceTotal, itemDiscount, serviceDiscountA, odometerTxt.getText(), datePicker.getDate().toString());
+        if (true) {
+            JOptionPane.showMessageDialog(null, "Invoice saved successfully!", "", JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(null, "Error occured!", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_saveBtnActionPerformed
+
+    private void resetBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetBtnActionPerformed
+        int option = JOptionPane.showConfirmDialog(null, "Are you sure you want to reset fields?", "", JOptionPane.YES_NO_CANCEL_OPTION);
+        if (option == JOptionPane.YES_OPTION) {
+            this.dispose();
+            InvoiceFrame ifr = new InvoiceFrame();
+            ifr.setVisible(true);
+            ifr.setLocationRelativeTo(null);
+        }
+    }//GEN-LAST:event_resetBtnActionPerformed
 
     /**
      * @param args the command line arguments
@@ -596,15 +747,9 @@ public class InvoiceFrame extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                try {
-                    ItemCodeGenerator.createItemMap();
-                    ItemCodeGenerator.createServiceMap();
-                    itemMap = ItemCodeGenerator.getItemMap();
-                    serviceMap = ItemCodeGenerator.getServiceMap();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                new InvoiceFrame().setVisible(true);
+                InvoiceFrame ifr = new InvoiceFrame();
+                ifr.setVisible(true);
+                ifr.setLocationRelativeTo(null);
             }
         });
     }
@@ -612,8 +757,8 @@ public class InvoiceFrame extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addBtn;
     private javax.swing.JTextField customerCodeTxt;
-    private javax.swing.JTextField customerCodeTxt1;
     private javax.swing.JTextField customerNameTxt;
+    private javax.swing.JTextField customerTelTxt;
     private javax.swing.JLabel dateLbl;
     private org.jdesktop.swingx.JXDatePicker datePicker;
     private javax.swing.JButton delBtn;
@@ -627,6 +772,8 @@ public class InvoiceFrame extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -642,13 +789,17 @@ public class InvoiceFrame extends javax.swing.JFrame {
     private javax.swing.JSeparator jSeparator3;
     private javax.swing.JSeparator jSeparator4;
     private javax.swing.JSeparator jSeparator5;
+    private javax.swing.JSeparator jSeparator6;
     private javax.swing.JTextField jobNoTxt;
     private javax.swing.JPanel mainPanel;
     private javax.swing.JTextField matDiscount;
     private javax.swing.JTextField matDiscountAmnt;
     private javax.swing.JTextField matTotalTxt;
     private javax.swing.JButton newCustBtn;
+    private javax.swing.JTextField nextServiceTxt;
+    private javax.swing.JTextField odometerTxt;
     private javax.swing.JButton prviewBtn;
+    private javax.swing.JButton resetBtn;
     private javax.swing.JButton saveBtn;
     private javax.swing.JTextField serviceDiscount;
     private javax.swing.JTextField serviceDiscountAmnt;

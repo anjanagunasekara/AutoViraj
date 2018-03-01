@@ -16,6 +16,14 @@ public class Vehicle {
     private String type;
     private String model;
 
+    public Vehicle(String regNo, String odometer, Customer customer, String type, String model) {
+        this.regNo = regNo;
+        this.odometer = odometer;
+        this.customer = customer;
+        this.type = type;
+        this.model = model;
+    }
+    
     public String getRegNo() {
         return regNo;
     }
