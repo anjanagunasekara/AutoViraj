@@ -6,8 +6,11 @@
             <file>file:/C:/Users/anjanag/Documents/NetBeansProjects/AutoViraj/src/autoviraj/AutoViraj.java</file>
             <file>file:/C:/Users/anjanag/Documents/NetBeansProjects/AutoViraj/src/autoviraj/gui/InvoiceFrame.java</file>
             <file>file:/C:/Users/anjanag/Documents/NetBeansProjects/AutoViraj/src/autoviraj/models/Item.java</file>
+            <file>file:/C:/Users/anjanag/Documents/NetBeansProjects/AutoViraj/src/autoviraj/models/Vehicle.java</file>
             <file>file:/C:/Users/anjanag/Documents/NetBeansProjects/AutoViraj/src/autoviraj/models/ItemCodeGenerator.java</file>
-            <file>file:/C:/Users/anjanag/Documents/NetBeansProjects/AutoViraj/src/resources/codes.csv</file>
+            <file>file:/C:/Users/anjanag/Documents/NetBeansProjects/AutoViraj/src/autoviraj/models/Customer.java</file>
+            <file>file:/C:/Users/anjanag/Documents/NetBeansProjects/AutoViraj/src/autoviraj/gui/MainFrame.java</file>
+            <file>file:/C:/Users/anjanag/Documents/NetBeansProjects/AutoViraj/src/autoviraj/models/Invoice.java</file>
         </group>
     </open-files>
 </project-private>

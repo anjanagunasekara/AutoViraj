@@ -15,13 +15,17 @@ import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.table.DefaultTableModel;
+import org.icepdf.ri.common.SwingController;
+import org.icepdf.ri.common.SwingViewBuilder;
 
 /**
  *
@@ -206,6 +210,11 @@ public class InvoiceFrame extends javax.swing.JFrame {
 
         prviewBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/preview.png"))); // NOI18N
         prviewBtn.setText("Preview");
+        prviewBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                prviewBtnActionPerformed(evt);
+            }
+        });
 
         saveBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/save.png"))); // NOI18N
         saveBtn.setText("Save");
@@ -716,6 +725,22 @@ public class InvoiceFrame extends javax.swing.JFrame {
             ifr.setLocationRelativeTo(null);
         }
     }//GEN-LAST:event_resetBtnActionPerformed
+
+    private void prviewBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_prviewBtnActionPerformed
+        URL f = ItemCodeGenerator.class.getClassLoader().getResource("resources/abc.pdf");
+        SwingController controller = new SwingController();
+        SwingViewBuilder factory = new SwingViewBuilder(controller);
+        JPanel viewerComponentPanel = factory.buildViewerPanel();
+        controller.getDocumentViewController().setAnnotationCallback(new org.icepdf.ri.common.MyAnnotationCallback(controller.getDocumentViewController()));
+        JFrame applicationFrame = new JFrame();
+        applicationFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); //applicationFrame.getContentPane().add(viewerComponentPanel);
+        applicationFrame.add(viewerComponentPanel); 
+        controller.openDocument(f.getPath()); 
+        applicationFrame.pack(); 
+        applicationFrame.setVisible(true);
+        applicationFrame.setLocationRelativeTo(null);
+
+    }//GEN-LAST:event_prviewBtnActionPerformed
 
     /**
      * @param args the command line arguments

@@ -27,7 +27,7 @@ public class MainFrame extends javax.swing.JFrame {
             @Override
             public void windowClosing(WindowEvent we) {
                 String ObjButtons[] = {"Yes", "No"};
-                int PromptResult = JOptionPane.showOptionDialog(null, "Are you sure you want to exit?", "AutoViraj", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, ObjButtons, ObjButtons[1]);
+                int PromptResult = JOptionPane.showOptionDialog(null, "Are you sure you want to close the program?", "AutoViraj", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, ObjButtons, ObjButtons[1]);
                 if (PromptResult == JOptionPane.YES_OPTION) {
                     System.exit(0);
                 }
