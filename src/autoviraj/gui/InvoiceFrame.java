@@ -15,6 +15,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
@@ -47,10 +48,11 @@ public class InvoiceFrame extends javax.swing.JFrame {
     public InvoiceFrame() {
         initComponents();
         try {
-            ItemCodeGenerator.createItemMap();
-            ItemCodeGenerator.createServiceMap();
-            itemMap = ItemCodeGenerator.getItemMap();
-            serviceMap = ItemCodeGenerator.getServiceMap();
+            ItemCodeGenerator it = new ItemCodeGenerator();
+            it.createServiceMap();
+            it.createItemMap();
+            itemMap = it.getItemMap();
+            serviceMap = it.getServiceMap();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -429,7 +431,8 @@ public class InvoiceFrame extends javax.swing.JFrame {
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                         .addComponent(customerNameTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(newCustBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                        .addComponent(newCustBtn)
+                                        .addGap(14, 14, 14))))
                             .addComponent(jScrollPane2))))
                 .addGap(2, 2, 2))
         );
@@ -727,19 +730,24 @@ public class InvoiceFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_resetBtnActionPerformed
 
     private void prviewBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_prviewBtnActionPerformed
-        URL f = ItemCodeGenerator.class.getClassLoader().getResource("resources/abc.pdf");
+        URL f = getClass().getResource("/resources/abc.pdf");
         SwingController controller = new SwingController();
         SwingViewBuilder factory = new SwingViewBuilder(controller);
         JPanel viewerComponentPanel = factory.buildViewerPanel();
         controller.getDocumentViewController().setAnnotationCallback(new org.icepdf.ri.common.MyAnnotationCallback(controller.getDocumentViewController()));
-        JFrame applicationFrame = new JFrame();
-        applicationFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); //applicationFrame.getContentPane().add(viewerComponentPanel);
-        applicationFrame.add(viewerComponentPanel); 
-        controller.openDocument(f.getPath()); 
-        applicationFrame.pack(); 
+        JFrame applicationFrame = new JFrame();//applicationFrame.getContentPane().add(viewerComponentPanel);
+        applicationFrame.add(viewerComponentPanel);
+        controller.openDocument(f);
+        applicationFrame.pack();
         applicationFrame.setVisible(true);
         applicationFrame.setLocationRelativeTo(null);
-
+        applicationFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        applicationFrame.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent we) {
+                applicationFrame.dispose();
+            }
+        });
     }//GEN-LAST:event_prviewBtnActionPerformed
 
     /**

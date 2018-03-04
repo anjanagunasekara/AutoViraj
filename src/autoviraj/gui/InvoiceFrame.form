@@ -178,7 +178,8 @@
                                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                           <Component id="customerNameTxt" min="-2" pref="156" max="-2" attributes="0"/>
                                           <EmptySpace max="32767" attributes="0"/>
-                                          <Component id="newCustBtn" min="-2" pref="159" max="-2" attributes="0"/>
+                                          <Component id="newCustBtn" min="-2" max="-2" attributes="0"/>
+                                          <EmptySpace min="-2" pref="14" max="-2" attributes="0"/>
                                       </Group>
                                   </Group>
                               </Group>

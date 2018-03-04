@@ -49,7 +49,8 @@ public class MainFrame extends javax.swing.JFrame {
         jMenu1 = new javax.swing.JMenu();
         jMenu2 = new javax.swing.JMenu();
         runMenu = new javax.swing.JMenu();
-        jMenuItem1 = new javax.swing.JMenuItem();
+        invoiceMenu = new javax.swing.JMenuItem();
+        historyMenu = new javax.swing.JCheckBoxMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new javax.swing.BoxLayout(getContentPane(), javax.swing.BoxLayout.LINE_AXIS));
@@ -65,14 +66,23 @@ public class MainFrame extends javax.swing.JFrame {
 
         runMenu.setText("Run");
 
-        jMenuItem1.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_I, java.awt.event.InputEvent.SHIFT_MASK));
-        jMenuItem1.setText("Create Invoice");
-        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+        invoiceMenu.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_I, java.awt.event.InputEvent.CTRL_MASK));
+        invoiceMenu.setText("Create Invoice");
+        invoiceMenu.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem1ActionPerformed(evt);
+                invoiceMenuActionPerformed(evt);
             }
         });
-        runMenu.add(jMenuItem1);
+        runMenu.add(invoiceMenu);
+
+        historyMenu.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_H, java.awt.event.InputEvent.CTRL_MASK));
+        historyMenu.setText("Vehicle History");
+        historyMenu.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                historyMenuActionPerformed(evt);
+            }
+        });
+        runMenu.add(historyMenu);
 
         jMenuBar1.add(runMenu);
 
@@ -81,11 +91,17 @@ public class MainFrame extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+    private void invoiceMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_invoiceMenuActionPerformed
          InvoiceFrame ifr = new InvoiceFrame();
                 ifr.setVisible(true);
                 ifr.setLocationRelativeTo(null);
-    }//GEN-LAST:event_jMenuItem1ActionPerformed
+    }//GEN-LAST:event_invoiceMenuActionPerformed
+
+    private void historyMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_historyMenuActionPerformed
+         HistoryForm ifr = new HistoryForm();
+                ifr.setVisible(true);
+                ifr.setLocationRelativeTo(null);
+    }//GEN-LAST:event_historyMenuActionPerformed
 
     /**
      * @param args the command line arguments
@@ -123,11 +139,12 @@ public class MainFrame extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JCheckBoxMenuItem historyMenu;
+    private javax.swing.JMenuItem invoiceMenu;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenu runMenu;
     // End of variables declaration//GEN-END:variables
 }

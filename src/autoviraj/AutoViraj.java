@@ -5,6 +5,8 @@
  */
 package autoviraj;
 
+import autoviraj.gui.MainFrame;
+
 /**
  *
  * @author anjanag
@@ -15,7 +17,7 @@ public class AutoViraj {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        // TODO code application logic here
+        new MainFrame().setVisible(true);// TODO code application logic here
     }
     
 }

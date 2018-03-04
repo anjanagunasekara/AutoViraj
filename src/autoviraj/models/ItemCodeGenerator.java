@@ -10,6 +10,8 @@ import autoviraj.services.ServiceMapper;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
@@ -21,20 +23,18 @@ import java.util.Map;
 public class ItemCodeGenerator {
     static Map<String, Item> itemMap = new HashMap<>();
     static Map<String, Service> serviceMap = new HashMap<>();
-    public static Map<String, Item> getItemMap(){
+    public Map<String, Item> getItemMap(){
         return itemMap;
     }
     
-    public static Map<String, Service> getServiceMap(){
+    public Map<String, Service> getServiceMap(){
         return serviceMap;
     }
     
-    public static void createItemMap () throws IOException{
-        URL f = ItemCodeGenerator.class.getClassLoader().getResource("resources/codes_item.csv");
-        System.out.println(f.getPath());
-        FileReader fileReader = new FileReader(f.getPath());
+    public void createItemMap () throws IOException{
+        InputStream is = getClass().getResourceAsStream("/resources/codes_item.csv");
         ItemMapper mapper = new ItemMapper();
-        BufferedReader bufferedReader = new BufferedReader(fileReader);
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(is));
         String line;
         while((line = bufferedReader.readLine()) != null) {            
             String split[] = line.split(",");
@@ -45,12 +45,10 @@ public class ItemCodeGenerator {
         bufferedReader.close();
     }
     
-    public static void createServiceMap () throws IOException{
-        URL f = ItemCodeGenerator.class.getClassLoader().getResource("resources/codes_service.csv");
-        System.out.println(f.getPath());
-        FileReader fileReader = new FileReader(f.getPath());
+    public void createServiceMap () throws IOException{
+        InputStream is = getClass().getResourceAsStream("/resources/codes_service.csv");
         ServiceMapper mapper = new ServiceMapper();
-        BufferedReader bufferedReader = new BufferedReader(fileReader);
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(is));
         String line;
         while((line = bufferedReader.readLine()) != null) {            
             String split[] = line.split(",");
