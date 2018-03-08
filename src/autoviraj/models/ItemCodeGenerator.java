@@ -30,7 +30,7 @@ public class ItemCodeGenerator {
     public Map<String, Service> getServiceMap(){
         return serviceMap;
     }
-    
+
     public void createItemMap () throws IOException{
         InputStream is = getClass().getResourceAsStream("/resources/codes_item.csv");
         ItemMapper mapper = new ItemMapper();
@@ -38,7 +38,7 @@ public class ItemCodeGenerator {
         String line;
         while((line = bufferedReader.readLine()) != null) {            
             String split[] = line.split(",");
-            Item item = new Item(split[1], Double.parseDouble(split[2]), split[0]);
+            Item item = new Item(split[0], split[1], Double.parseDouble(split[2]),"Nos");
             itemMap.put(split[0],item);
             mapper.createNewItem(item);
         }
@@ -52,7 +52,7 @@ public class ItemCodeGenerator {
         String line;
         while((line = bufferedReader.readLine()) != null) {            
             String split[] = line.split(",");
-            Service service = new Service(split[1], Double.parseDouble(split[2]), split[0]);
+            Service service = new Service(split[0], split[1], Double.parseDouble(split[2]));
             serviceMap.put(split[0],service);
             mapper.createNewService(service);
         }

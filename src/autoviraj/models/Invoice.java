@@ -5,69 +5,41 @@
  */
 package autoviraj.models;
 
-import java.util.List;
+import java.util.ArrayList;
+import java.util.Date;
 
 /**
  *
- * @author anjanag
+ * @author Sehan Rathnayake
  */
 public class Invoice {
-    private String invoiceCode;
-    private List<Item> itemList;
-    private List<Service> serviceList;
-    private Vehicle vehicle;
-    private double grandTotal;
-    private double serviceTotal;
-    private double itemTotal;
-    private double serviceDiscount;
-    private double itemDiscount;
-    private String odometer;
-    private String date;
-
-    public Invoice(String invoiceCode, List<Item> itemList, List<Service> serviceList, Vehicle vehicle, double grandTotal, double serviceTotal, double itemTotal, double serviceDiscount, double itemDiscount, String odometer, String date) {
-        this.invoiceCode = invoiceCode;
-        this.itemList = itemList;
-        this.serviceList = serviceList;
-        this.vehicle = vehicle;
-        this.grandTotal = grandTotal;
-        this.serviceTotal = serviceTotal;
-        this.itemTotal = itemTotal;
-        this.serviceDiscount = serviceDiscount;
-        this.itemDiscount = itemDiscount;
-        this.odometer = odometer;
-        this.date = date;
-    }
-
-    public String getDate() {
-        return date;
-    }
-
-    public void setDate(String date) {
-        this.date = date;
-    }
+    int invoiceId;
+    Customer customer;
+    Vehicle vehicle;
+    Date date;
+    double subtotal;
+    double discount;
+    double netTotal;
+    double currentMeter;
+    double nextService;
     
-    public String getInvoiceCode() {
-        return invoiceCode;
+    ArrayList<InvoiceItem> invoiceItems;
+    ArrayList<InvoiceService> invoiceServices;
+
+    public int getInvoiceId() {
+        return invoiceId;
     }
 
-    public void setInvoiceCode(String invoiceCode) {
-        this.invoiceCode = invoiceCode;
+    public void setInvoiceId(int invoiceId) {
+        this.invoiceId = invoiceId;
     }
 
-    public List<Item> getItemList() {
-        return itemList;
+    public Customer getCustomer() {
+        return customer;
     }
 
-    public void setItemList(List<Item> itemList) {
-        this.itemList = itemList;
-    }
-
-    public List<Service> getServiceList() {
-        return serviceList;
-    }
-
-    public void setServiceList(List<Service> serviceList) {
-        this.serviceList = serviceList;
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
     }
 
     public Vehicle getVehicle() {
@@ -78,53 +50,68 @@ public class Invoice {
         this.vehicle = vehicle;
     }
 
-    public double getGrandTotal() {
-        return grandTotal;
+    public Date getDate() {
+        return date;
     }
 
-    public void setGrandTotal(double grandTotal) {
-        this.grandTotal = grandTotal;
+    public void setDate(Date date) {
+        this.date = date;
     }
 
-    public double getServiceTotal() {
-        return serviceTotal;
+    public double getSubtotal() {
+        return subtotal;
     }
 
-    public void setServiceTotal(double serviceTotal) {
-        this.serviceTotal = serviceTotal;
+    public void setSubtotal(double subtotal) {
+        this.subtotal = subtotal;
     }
 
-    public double getItemTotal() {
-        return itemTotal;
+    public double getDiscount() {
+        return discount;
     }
 
-    public void setItemTotal(double itemTotal) {
-        this.itemTotal = itemTotal;
+    public void setDiscount(double discount) {
+        this.discount = discount;
     }
 
-    public double getServiceDiscount() {
-        return serviceDiscount;
+    public double getNetTotal() {
+        return netTotal;
     }
 
-    public void setServiceDiscount(double serviceDiscount) {
-        this.serviceDiscount = serviceDiscount;
+    public void setNetTotal(double netTotal) {
+        this.netTotal = netTotal;
     }
 
-    public double getItemDiscount() {
-        return itemDiscount;
+    public ArrayList<InvoiceItem> getInvoiceItems() {
+        return invoiceItems;
     }
 
-    public void setItemDiscount(double itemDiscount) {
-        this.itemDiscount = itemDiscount;
+    public void setInvoiceItems(ArrayList<InvoiceItem> invoiceItems) {
+        this.invoiceItems = invoiceItems;
     }
 
-    public String getOdometer() {
-        return odometer;
+    public ArrayList<InvoiceService> getInvoiceServices() {
+        return invoiceServices;
     }
 
-    public void setOdometer(String odometer) {
-        this.odometer = odometer;
+    public void setInvoiceServices(ArrayList<InvoiceService> invoiceServices) {
+        this.invoiceServices = invoiceServices;
     }
-    
+
+    public double getCurrentMeter() {
+        return currentMeter;
+    }
+
+    public void setCurrentMeter(double currentMeter) {
+        this.currentMeter = currentMeter;
+    }
+
+    public double getNextService() {
+        return nextService;
+    }
+
+    public void setNextService(double nextService) {
+        this.nextService = nextService;
+    }
     
 }

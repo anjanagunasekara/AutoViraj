@@ -10,20 +10,21 @@ package autoviraj.models;
  * @author anjanag
  */
 public class Vehicle {
+    private int VehicleId;
     private String regNo;
     private String odometer;
     private Customer customer;
     private String type;
     private String model;
 
-    public Vehicle(String regNo, String odometer, Customer customer, String type, String model) {
-        this.regNo = regNo;
-        this.odometer = odometer;
-        this.customer = customer;
-        this.type = type;
-        this.model = model;
+    public int getVehicleId() {
+        return VehicleId;
     }
-    
+
+    public void setVehicleId(int VehicleId) {
+        this.VehicleId = VehicleId;
+    }
+
     public String getRegNo() {
         return regNo;
     }

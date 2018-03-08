@@ -7,10 +7,13 @@ package autoviraj.gui;
 
 import autoviraj.models.Customer;
 import autoviraj.models.Invoice;
+import autoviraj.models.InvoiceItem;
+import autoviraj.models.InvoiceService;
 import autoviraj.models.Item;
 import autoviraj.models.ItemCodeGenerator;
 import autoviraj.models.Service;
 import autoviraj.models.Vehicle;
+import autoviraj.services.PrintInvoice;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -135,7 +138,6 @@ public class InvoiceFrame extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setMinimumSize(new java.awt.Dimension(100, 771));
-        setPreferredSize(new java.awt.Dimension(975, 810));
 
         invoiceNoLbl.setText(" Invoice Number : ");
 
@@ -166,14 +168,14 @@ public class InvoiceFrame extends javax.swing.JFrame {
 
         itemTabel.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null}
+                {null, null, null, null, null}
             },
             new String [] {
-                "Item", "Rate", "Qty", "Total"
+                "Code", "Item", "Rate", "Qty", "Total"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class
+                java.lang.Object.class, java.lang.String.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -196,10 +198,8 @@ public class InvoiceFrame extends javax.swing.JFrame {
         jScrollPane1.setViewportView(itemTabel);
         itemTabel.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         if (itemTabel.getColumnModel().getColumnCount() > 0) {
-            itemTabel.getColumnModel().getColumn(0).setPreferredWidth(750);
-            itemTabel.getColumnModel().getColumn(1).setResizable(false);
-            itemTabel.getColumnModel().getColumn(1).setHeaderValue("Rate");
-            itemTabel.getColumnModel().getColumn(2).setHeaderValue("Qty");
+            itemTabel.getColumnModel().getColumn(1).setPreferredWidth(750);
+            itemTabel.getColumnModel().getColumn(2).setResizable(false);
         }
 
         addBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/add.png"))); // NOI18N
@@ -257,20 +257,21 @@ public class InvoiceFrame extends javax.swing.JFrame {
 
         serviceTabel.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null}
+                {null, null, null, null, null}
             },
             new String [] {
-                "Service", "Total"
+                "Code", "Service", "Rate", "Qty", "Total"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.Object.class
+                java.lang.Object.class, java.lang.String.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class
             };
 
             public Class getColumnClass(int columnIndex) {
                 return types [columnIndex];
             }
         });
+        serviceTabel.setColumnSelectionAllowed(true);
         serviceTabel.addInputMethodListener(new java.awt.event.InputMethodListener() {
             public void caretPositionChanged(java.awt.event.InputMethodEvent evt) {
             }
@@ -286,7 +287,7 @@ public class InvoiceFrame extends javax.swing.JFrame {
         jScrollPane2.setViewportView(serviceTabel);
         serviceTabel.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         if (serviceTabel.getColumnModel().getColumnCount() > 0) {
-            serviceTabel.getColumnModel().getColumn(0).setPreferredWidth(750);
+            serviceTabel.getColumnModel().getColumn(1).setPreferredWidth(750);
         }
 
         jLabel15.setText("Next service :");
@@ -550,10 +551,10 @@ public class InvoiceFrame extends javax.swing.JFrame {
             if (itemTabel.getSelectedColumn() == 0) {
                 String code = itemTabel.getModel().getValueAt(itemTabel.getSelectedRow(), 0).toString();
                 if (itemMap.containsKey(code)) {
-                    itemTabel.getModel().setValueAt(itemMap.get(code).getItemName(), itemTabel.getSelectedRow(), 0);
-                    itemTabel.getModel().setValueAt(itemMap.get(code).getPrice(), itemTabel.getSelectedRow(), 1);
-                    itemTabel.getModel().setValueAt(1, itemTabel.getSelectedRow(), 2);
-                    itemTabel.getModel().setValueAt(1 * itemMap.get(code).getPrice(), itemTabel.getSelectedRow(), 3);
+                    itemTabel.getModel().setValueAt(itemMap.get(code).getName(), itemTabel.getSelectedRow(), 1);
+                    itemTabel.getModel().setValueAt(itemMap.get(code).getPrice(), itemTabel.getSelectedRow(), 2);
+                    itemTabel.getModel().setValueAt(1, itemTabel.getSelectedRow(), 3);
+                    itemTabel.getModel().setValueAt(1 * itemMap.get(code).getPrice(), itemTabel.getSelectedRow(), 4);
                 }
                 if (itemTabel.getSelectedRow() + 1 == itemTabel.getRowCount()) {
                     DefaultTableModel defaultTableModel = (DefaultTableModel) itemTabel.getModel();
@@ -595,8 +596,8 @@ public class InvoiceFrame extends javax.swing.JFrame {
             if (serviceTabel.getSelectedColumn() == 0) {
                 String code = serviceTabel.getModel().getValueAt(serviceTabel.getSelectedRow(), 0).toString();
                 if (serviceMap.containsKey(code)) {
-                    serviceTabel.getModel().setValueAt(serviceMap.get(code).getName(), serviceTabel.getSelectedRow(), 0);
-                    serviceTabel.getModel().setValueAt(serviceMap.get(code).getPrice(), serviceTabel.getSelectedRow(), 1);
+                    serviceTabel.getModel().setValueAt(serviceMap.get(code).getName(), serviceTabel.getSelectedRow(), 1);
+                    serviceTabel.getModel().setValueAt(serviceMap.get(code).getPrice(), serviceTabel.getSelectedRow(), 2);
                 }
                 if (serviceTabel.getSelectedRow() + 1 == serviceTabel.getRowCount()) {
                     DefaultTableModel defaultTableModel = (DefaultTableModel) serviceTabel.getModel();
@@ -607,7 +608,7 @@ public class InvoiceFrame extends javax.swing.JFrame {
             for (int i = 0; i < serviceTabel.getRowCount(); i++) {
                 double rowTotal = 0;
                 try {
-                    rowTotal = Double.parseDouble(serviceTabel.getModel().getValueAt(i, 1).toString());
+                    rowTotal = Double.parseDouble(serviceTabel.getModel().getValueAt(i,serviceTabel.getColumnCount()-1 ).toString());
                     serviceTotal += rowTotal;
                 } catch (Exception e) {
                 }
@@ -674,19 +675,78 @@ public class InvoiceFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_matDiscountActionPerformed
 
     private void addBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addBtnActionPerformed
-        Customer c = new Customer(customerNameTxt.getText(), "", customerTelTxt.getText());
-        Vehicle v = new Vehicle(vehicleNoTxt.getText(), odometerTxt.getSelectedText(), c, vehicleTypeTxt.getText(), "");
-        List<Item> itemList = new ArrayList<>();
-        List<Service> serviceList = new ArrayList<>();
-        for (Item i : itemMap.values()) {
-            itemList.add(i);
+        Customer c = new Customer();
+        c.setName(customerNameTxt.getText());
+        c.setTel(customerTelTxt.getText());
+        c.setAddress("No-address");
+
+        Vehicle v = new Vehicle();
+        v.setRegNo(vehicleNoTxt.getText());
+        v.setOdometer(odometerTxt.getSelectedText());
+        v.setModel(vehicleTypeTxt.getText());
+        v.setType("No-Type");
+
+        ArrayList<InvoiceItem> itemList = new ArrayList<>();
+        ArrayList<InvoiceService> serviceList = new ArrayList<>();
+
+        for (int i = 0; i <itemTabel.getModel().getRowCount(); i++) {
+            InvoiceItem invoiceItem = new InvoiceItem();
+            invoiceItem.setItemId(itemTabel.getModel().getValueAt( i, 0)+"");
+            invoiceItem.setName(itemTabel.getModel().getValueAt( i, 1)+"");
+            invoiceItem.setUnitPrice(Double.parseDouble(itemTabel.getModel().getValueAt( i, 2).toString()));
+            invoiceItem.setUnits(Double.parseDouble(itemTabel.getModel().getValueAt( i, 3).toString()));
+            invoiceItem.setUnitName("Nos");
+            itemList.add(invoiceItem);
         }
-        for (Service s : serviceMap.values()) {
-            serviceList.add(s);
+        
+        for (int i = 0; i <serviceTabel.getModel().getRowCount(); i++) {
+            InvoiceService invoiceService = new InvoiceService();
+            invoiceService.setServiceId(serviceTabel.getModel().getValueAt( i, 0)+"");
+            invoiceService.setName(serviceTabel.getModel().getValueAt( i, 1)+"");
+            invoiceService.setUnitPrice(0);
+            invoiceService.setUnits(Double.parseDouble(serviceTabel.getModel().getValueAt( i, 3).toString()));
+            invoiceService.setUnitName("Nos");
+            serviceList.add(invoiceService);
         }
-        Invoice i = new Invoice(invoiceNoTxt.getText(), itemList, serviceList, v, grandTotal, itemTotal, serviceTotal, itemDiscount, serviceDiscountA, odometerTxt.getText(), datePicker.getDate().toString());
-        if (false) {
-            JOptionPane.showMessageDialog(null, "Invoice is dispatched to print", "", JOptionPane.INFORMATION_MESSAGE);
+
+        Invoice i = new Invoice();
+        i.setInvoiceItems(itemList);
+        i.setInvoiceServices(serviceList);
+        i.setSubtotal(grandTotal+serviceDiscountA+itemDiscount);
+        i.setDiscount(itemDiscount);
+        i.setNetTotal(grandTotal);
+        i.setDate(datePicker.getDate());
+        
+        i.setCustomer(c);
+        i.setVehicle(v);
+        
+        try {
+             PrintInvoice.printInvoice(i);
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+       
+        
+        
+        if (true) {
+            URL f = getClass().getResource("/resources/invoice.pdf");
+        SwingController controller = new SwingController();
+        SwingViewBuilder factory = new SwingViewBuilder(controller);
+        JPanel viewerComponentPanel = factory.buildViewerPanel();
+        controller.getDocumentViewController().setAnnotationCallback(new org.icepdf.ri.common.MyAnnotationCallback(controller.getDocumentViewController()));
+        JFrame applicationFrame = new JFrame();//applicationFrame.getContentPane().add(viewerComponentPanel);
+        applicationFrame.add(viewerComponentPanel);
+        controller.openDocument(f);
+        applicationFrame.pack();
+        applicationFrame.setVisible(true);
+        applicationFrame.setLocationRelativeTo(null);
+        applicationFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        applicationFrame.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent we) {
+                applicationFrame.dispose();
+            }
+        });
         } else {
             JOptionPane.showMessageDialog(null, "Error occured!", "Error", JOptionPane.ERROR_MESSAGE);
         }
@@ -701,17 +761,6 @@ public class InvoiceFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_nextServiceTxtActionPerformed
 
     private void saveBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveBtnActionPerformed
-        Customer c = new Customer(customerNameTxt.getText(), "", customerTelTxt.getText());
-        Vehicle v = new Vehicle(vehicleNoTxt.getText(), odometerTxt.getSelectedText(), c, vehicleTypeTxt.getText(), "");
-        List<Item> itemList = new ArrayList<>();
-        List<Service> serviceList = new ArrayList<>();
-        for (Item i : itemMap.values()) {
-            itemList.add(i);
-        }
-        for (Service s : serviceMap.values()) {
-            serviceList.add(s);
-        }
-        Invoice i = new Invoice(invoiceNoTxt.getText(), itemList, serviceList, v, grandTotal, itemTotal, serviceTotal, itemDiscount, serviceDiscountA, odometerTxt.getText(), datePicker.getDate().toString());
         if (true) {
             JOptionPane.showMessageDialog(null, "Invoice saved successfully!", "", JOptionPane.INFORMATION_MESSAGE);
         } else {
@@ -730,7 +779,7 @@ public class InvoiceFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_resetBtnActionPerformed
 
     private void prviewBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_prviewBtnActionPerformed
-        URL f = getClass().getResource("/resources/abc.pdf");
+        URL f = getClass().getResource("/resources/invoice.pdf");
         SwingController controller = new SwingController();
         SwingViewBuilder factory = new SwingViewBuilder(controller);
         JPanel viewerComponentPanel = factory.buildViewerPanel();
