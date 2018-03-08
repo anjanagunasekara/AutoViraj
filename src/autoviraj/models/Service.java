@@ -10,24 +10,27 @@ package autoviraj.models;
  * @author anjanag
  */
 public class Service {
+    private String serviceId;
     private String name;
     private double price;
-    private String code;    
+    private String unitName;    
 
-    public Service(String name, double prie, String code) {
+    public String getServiceId() {
+        return serviceId;
+    }
+
+    public Service(String serviceId, String name, double price) {
+        this.serviceId = serviceId;
         this.name = name;
-        this.price = prie;
-        this.code = code;
+        this.price = price;
     }
 
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
+    public Service() {
     }
     
+    public void setServiceId(String serviceId) {
+        this.serviceId = serviceId;
+    }
 
     public String getName() {
         return name;
@@ -41,8 +44,18 @@ public class Service {
         return price;
     }
 
-    public void setPrice(double prie) {
-        this.price = prie;
+    public void setPrice(double price) {
+        this.price = price;
     }
+
+    public String getUnitName() {
+        return unitName;
+    }
+
+    public void setUnitName(String unitName) {
+        this.unitName = unitName;
+    }
+
+    
     
 }

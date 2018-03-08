@@ -10,31 +10,27 @@ package autoviraj.models;
  * @author anjanag
  */
 public class Item {
-    private String itemName;
+    private String itemId;
+    private String name;
     private double price;
-    private String description;
-    private String itemCode;
+    private String unitName;    
 
-    public Item(String itemName, double price, String itemCode) {
-        this.itemName = itemName;
+    public Item(String itemId, String name,double price,  String unitName) {
+        this.itemId = itemId;
         this.price = price;
-        this.itemCode = itemCode;
+        this.name = name;
+        this.unitName = unitName;
+    }
+
+    public Item() {
     }
     
-    public String getItemCode() {
-        return itemCode;
+    public String getItemId() {
+        return itemId;
     }
 
-    public void setItemCode(String itemCode) {
-        this.itemCode = itemCode;
-    }
-
-    public String getItemName() {
-        return itemName;
-    }
-
-    public void setItemName(String itemName) {
-        this.itemName = itemName;
+    public void setItemId(String itemId) {
+        this.itemId = itemId;
     }
 
     public double getPrice() {
@@ -45,14 +41,21 @@ public class Item {
         this.price = price;
     }
 
-    public String getDescription() {
-        return description;
+    public String getName() {
+        return name;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setName(String name) {
+        this.name = name;
     }
-    
-    
+
+    public String getUnitName() {
+        return unitName;
+    }
+
+    public void setUnitName(String unitName) {
+        this.unitName = unitName;
+    }
+
     
 }

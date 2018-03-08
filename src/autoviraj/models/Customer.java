@@ -10,14 +10,18 @@ package autoviraj.models;
  * @author anjanag
  */
 public class Customer {
+    
+    private int customerId;
     private String name;
     private String address;
     private String tel;
 
-    public Customer(String name, String address, String tel) {
-        this.name = name;
-        this.address = address;
-        this.tel = tel;
+    public int getCustomerId() {
+        return customerId;
+    }
+
+    public void setCustomerId(int customerId) {
+        this.customerId = customerId;
     }
     
     public String getName() {
