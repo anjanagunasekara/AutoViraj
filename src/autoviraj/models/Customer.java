@@ -11,10 +11,10 @@ package autoviraj.models;
  */
 public class Customer {
     
-    private int customerId;
-    private String name;
-    private String address;
-    private String tel;
+    private int customerId = -1;
+    private String name = "";
+    private String address = "";
+    private String tel = "";
 
     public int getCustomerId() {
         return customerId;

@@ -13,9 +13,9 @@ public class Vehicle {
     private int VehicleId;
     private String regNo;
     private String odometer;
-    private Customer customer;
-    private String type;
-    private String model;
+    private Customer customer = new Customer();
+    private String type = "";
+    private String model = "";
 
     public int getVehicleId() {
         return VehicleId;

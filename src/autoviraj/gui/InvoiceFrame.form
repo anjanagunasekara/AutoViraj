@@ -44,9 +44,9 @@
               <Group type="102" attributes="0">
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
-                          <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="9" max="-2" attributes="0"/>
                           <Component id="invoiceNoLbl" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
                           <Component id="invoiceNoTxt" min="-2" pref="155" max="-2" attributes="0"/>
                           <EmptySpace max="32767" attributes="0"/>
                           <Component id="dateLbl" min="-2" max="-2" attributes="0"/>
@@ -294,7 +294,7 @@
       <SubComponents>
         <Component class="javax.swing.JLabel" name="invoiceNoLbl">
           <Properties>
-            <Property name="text" type="java.lang.String" value=" Invoice Number : "/>
+            <Property name="text" type="java.lang.String" value=" Invoice Number  : "/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="dateLbl">
@@ -308,6 +308,9 @@
           </Events>
         </Component>
         <Component class="javax.swing.JTextField" name="vehicleNoTxt">
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="vehicleNoTxtActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel1">
           <Properties>
@@ -323,7 +326,7 @@
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel2">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Service Type :"/>
+            <Property name="text" type="java.lang.String" value="Service Type     :"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="serviceTypeTxt">

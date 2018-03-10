@@ -6,6 +6,7 @@
 package autoviraj.gui;
 
 import autoviraj.dao.InvoiceDao;
+import autoviraj.dao.VehicleDao;
 import autoviraj.models.Customer;
 import autoviraj.models.Invoice;
 import autoviraj.models.InvoiceItem;
@@ -18,6 +19,7 @@ import autoviraj.services.PrintInvoice;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -45,6 +47,7 @@ public class InvoiceFrame extends javax.swing.JFrame {
     double itemTotal = 0;
     double serviceDiscountA = 0;
     double itemDiscount = 0;
+    boolean isVehicleExist = false;
 
     /**
      * Creates new form InvoiceFrame
@@ -60,7 +63,10 @@ public class InvoiceFrame extends javax.swing.JFrame {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        invoiceNoTxt.setText((InvoiceDao.getLastInvoiceNo()+1) + "");
+        invoiceNoTxt.setText((InvoiceDao.getLastInvoiceNo() + 1) + "");
+        customerCodeTxt.setEditable(false);
+        invoiceNoTxt.setEditable(false);
+        vehicleNoTxt.requestFocus();
         jobNoTxt.setText("1");
         datePicker.setDate(new Date());
         this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
@@ -68,7 +74,7 @@ public class InvoiceFrame extends javax.swing.JFrame {
             @Override
             public void windowClosing(WindowEvent we) {
                 String ObjButtons[] = {"Yes", "No"};
-                int PromptResult = JOptionPane.showOptionDialog(null, "Are you sure you want to exit?", "AutoViraj", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, ObjButtons, ObjButtons[1]);
+                int PromptResult = JOptionPane.showOptionDialog(null, "Are you sure you want close the invoice?", "AutoViraj", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, ObjButtons, ObjButtons[1]);
                 if (PromptResult == JOptionPane.YES_OPTION) {
                     InvoiceFrame.this.dispose();
                 }
@@ -142,7 +148,7 @@ public class InvoiceFrame extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setMinimumSize(new java.awt.Dimension(100, 771));
 
-        invoiceNoLbl.setText(" Invoice Number : ");
+        invoiceNoLbl.setText(" Invoice Number  : ");
 
         dateLbl.setText(" Date :");
 
@@ -152,11 +158,17 @@ public class InvoiceFrame extends javax.swing.JFrame {
             }
         });
 
+        vehicleNoTxt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                vehicleNoTxtActionPerformed(evt);
+            }
+        });
+
         jLabel1.setText(" Vehicle Number : ");
 
         jLabel4.setText(" Vehicle Type : ");
 
-        jLabel2.setText("Service Type :");
+        jLabel2.setText("Service Type     :");
 
         jLabel3.setText("Job No : ");
 
@@ -326,9 +338,9 @@ public class InvoiceFrame extends javax.swing.JFrame {
             .addGroup(mainPanelLayout.createSequentialGroup()
                 .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(mainPanelLayout.createSequentialGroup()
-                        .addGap(2, 2, 2)
+                        .addGap(9, 9, 9)
                         .addComponent(invoiceNoLbl)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(invoiceNoTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(dateLbl)
@@ -587,7 +599,7 @@ public class InvoiceFrame extends javax.swing.JFrame {
             } catch (Exception e) {
             }
             grandTotalTxt.setText(serviceFinal + itemFinal + "");
-            grandTotal = serviceFinal+itemFinal;
+            grandTotal = serviceFinal + itemFinal;
         }
     }//GEN-LAST:event_itemTabelKeyReleased
 
@@ -633,7 +645,7 @@ public class InvoiceFrame extends javax.swing.JFrame {
             } catch (Exception e) {
             }
             grandTotalTxt.setText(serviceFinal + itemFinal + "");
-            grandTotal = serviceFinal+itemFinal;
+            grandTotal = serviceFinal + itemFinal;
         }
     }//GEN-LAST:event_serviceTabelKeyReleased
 
@@ -655,7 +667,7 @@ public class InvoiceFrame extends javax.swing.JFrame {
             } catch (Exception e) {
             }
             grandTotalTxt.setText(serviceFinal + itemFinal + "");
-            grandTotal = serviceFinal+itemFinal;
+            grandTotal = serviceFinal + itemFinal;
         } catch (Exception e) {
         }
     }//GEN-LAST:event_serviceDiscountActionPerformed
@@ -678,7 +690,7 @@ public class InvoiceFrame extends javax.swing.JFrame {
             } catch (Exception e) {
             }
             grandTotalTxt.setText(serviceFinal + itemFinal + "");
-            grandTotal = serviceFinal+itemFinal;
+            grandTotal = serviceFinal + itemFinal;
         } catch (Exception e) {
         }
     }//GEN-LAST:event_matDiscountActionPerformed
@@ -691,7 +703,7 @@ public class InvoiceFrame extends javax.swing.JFrame {
 
         Vehicle v = new Vehicle();
         v.setRegNo(vehicleNoTxt.getText());
-        v.setOdometer(odometerTxt.getSelectedText());
+        v.setOdometer("".equals(odometerTxt.getText()) ? "-" : odometerTxt.getText());
         v.setModel(vehicleTypeTxt.getText());
         v.setType("No-Type");
 
@@ -725,29 +737,45 @@ public class InvoiceFrame extends javax.swing.JFrame {
         Invoice i = new Invoice();
         i.setInvoiceItems(itemList);
         i.setInvoiceServices(serviceList);
-        i.setSubtotal(grandTotal + serviceDiscountA + itemDiscount);
-        i.setDiscount(itemDiscount);
+        i.setSubtotal(grandTotal + itemTotal*itemDiscount + serviceTotal*serviceDiscountA);
+        i.setDiscount(itemTotal*itemDiscount + serviceTotal*serviceDiscountA);
         i.setNetTotal(grandTotal);
         i.setDate(datePicker.getDate());
 
         i.setCustomer(c);
         i.setVehicle(v);
-
+        i.setInvoiceId(Integer.parseInt(invoiceNoTxt.getText()));
         try {
             PrintInvoice.printInvoice(i);
         } catch (Exception e) {
             System.out.println(e);
         }
-        
+
+        if (!isVehicleExist) {
+            v.setCustomer(c);
+            VehicleDao.insertVehicle(v);
+        } else {
+            if ("".equals(customerCodeTxt.getText())) {
+                VehicleDao.insertCustomer(c);
+                isVehicleExist = false;
+            }
+        }
+        Vehicle insertedVehicle = VehicleDao.getVehicle(v.getRegNo());
+        i.getCustomer().setCustomerId(insertedVehicle.getCustomer().getCustomerId());
+        i.getVehicle().setVehicleId(insertedVehicle.getVehicleId());
         if (InvoiceDao.saveInvoice(i)) {
-            URL f = getClass().getResource("/resources/invoice.pdf");
             SwingController controller = new SwingController();
             SwingViewBuilder factory = new SwingViewBuilder(controller);
             JPanel viewerComponentPanel = factory.buildViewerPanel();
             controller.getDocumentViewController().setAnnotationCallback(new org.icepdf.ri.common.MyAnnotationCallback(controller.getDocumentViewController()));
             JFrame applicationFrame = new JFrame();//applicationFrame.getContentPane().add(viewerComponentPanel);
             applicationFrame.add(viewerComponentPanel);
-            controller.openDocument(f);
+            File file = new File(i.getInvoiceId() + ".pdf");
+            while (!file.exists()) {
+                 file = new File(i.getInvoiceId() + ".pdf");
+            }
+            URL f = getClass().getResource("/resources/" + i.getInvoiceId() + ".pdf");
+            controller.openDocument(i.getInvoiceId() + ".pdf");
             applicationFrame.pack();
             applicationFrame.setVisible(true);
             applicationFrame.setLocationRelativeTo(null);
@@ -761,6 +789,7 @@ public class InvoiceFrame extends javax.swing.JFrame {
         } else {
             JOptionPane.showMessageDialog(null, "Error occured!", "Error", JOptionPane.ERROR_MESSAGE);
         }
+        addBtn.setEnabled(false);
     }//GEN-LAST:event_addBtnActionPerformed
 
     private void odometerTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_odometerTxtActionPerformed
@@ -781,6 +810,7 @@ public class InvoiceFrame extends javax.swing.JFrame {
 
     private void resetBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetBtnActionPerformed
         int option = JOptionPane.showConfirmDialog(null, "Are you sure you want to reset fields?", "", JOptionPane.YES_NO_CANCEL_OPTION);
+        addBtn.setEnabled(true);
         if (option == JOptionPane.YES_OPTION) {
             this.dispose();
             InvoiceFrame ifr = new InvoiceFrame();
@@ -809,6 +839,18 @@ public class InvoiceFrame extends javax.swing.JFrame {
             }
         });
     }//GEN-LAST:event_prviewBtnActionPerformed
+
+    private void vehicleNoTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_vehicleNoTxtActionPerformed
+        Vehicle v = VehicleDao.getVehicle(vehicleNoTxt.getText());
+        if (v != null) {
+            vehicleTypeTxt.setText(v.getType());
+            customerCodeTxt.setText(v.getCustomer().getCustomerId() == -1 ? "" : v.getCustomer().getCustomerId() + "");
+            customerTelTxt.setText(v.getCustomer().getTel());
+            customerNameTxt.setText(v.getCustomer().getName());
+            isVehicleExist = true;
+        }
+
+    }//GEN-LAST:event_vehicleNoTxtActionPerformed
 
     /**
      * @param args the command line arguments

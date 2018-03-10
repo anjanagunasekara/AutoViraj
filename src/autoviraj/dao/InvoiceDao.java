@@ -149,7 +149,7 @@ public class InvoiceDao {
         try {
             Connection con = ConnectionFactory.getConnection();
             Statement stmt = con.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT  i.INVOICE_ID, i.DATE, i.SUB_TOTAL, i.DISCOUNT, i.NET_TOTAL, v.VEHICLE_ID,c.NAME FROM invoice i join vehicle v join customer c where i.VEHICLE_ID = v.VEHICLE_ID and v.CUSTOMER_ID = c.CUSTOMER_ID and i.DATE = '"+date+"' ");
+            ResultSet rs = stmt.executeQuery("SELECT  i.INVOICE_ID, i.DATE, i.SUB_TOTAL, i.DISCOUNT, i.NET_TOTAL, v.VEHICLE_ID,c.NAME FROM invoice i left outer join  vehicle v  on (i.VEHICLE_ID = v.VEHICLE_ID )left outer join customer c on (v.CUSTOMER_ID = c.CUSTOMER_ID) where i.DATE = '"+date+"' ");
             while (rs.next()) {
                 Invoice i = new Invoice();
                 i.setDate(rs.getDate("DATE"));

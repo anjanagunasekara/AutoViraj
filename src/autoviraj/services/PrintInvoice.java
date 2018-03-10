@@ -36,7 +36,7 @@ public class PrintInvoice {
     public static void printInvoice(Invoice invoice) throws Exception {
 
         Document layoutDocument = new Document();
-        String path = "src/resources/invoice.pdf";
+        String path = invoice.getInvoiceId()+".pdf";
         PdfWriter docWriter = PdfWriter.getInstance(layoutDocument, new FileOutputStream(path));
         layoutDocument.open();
 
