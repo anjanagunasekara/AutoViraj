@@ -9,6 +9,9 @@ import autoviraj.dao.InvoiceDao;
 import autoviraj.dao.VehicleDao;
 import autoviraj.models.Invoice;
 import autoviraj.models.Vehicle;
+import com.sun.javafx.scene.control.skin.VirtualFlow;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 import javax.swing.table.DefaultTableModel;
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
@@ -26,6 +29,7 @@ public class HistoryForm extends javax.swing.JFrame {
      */
     public HistoryForm() {
         initComponents();
+        datePicker.setEnabled(false);
         vehicleNoCombo.removeAllItems();
         for (Vehicle s : VehicleDao.getAllVehicles()) {
             vehicleNoCombo.addItem(s.getRegNo());
@@ -51,10 +55,14 @@ public class HistoryForm extends javax.swing.JFrame {
         searchBtn = new javax.swing.JButton();
         vehicleNoCombo = new javax.swing.JComboBox<>();
         prviewBtn = new javax.swing.JButton();
+        jLabel2 = new javax.swing.JLabel();
+        datePicker = new org.jdesktop.swingx.JXDatePicker();
+        selectCombo = new javax.swing.JComboBox<>();
+        jLabel3 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jLabel1.setText(" Vehicle Number : ");
+        jLabel1.setText("Search by          :");
 
         itemTabel.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -101,6 +109,17 @@ public class HistoryForm extends javax.swing.JFrame {
         prviewBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/back.png"))); // NOI18N
         prviewBtn.setText("Back");
 
+        jLabel2.setText("Date :");
+
+        selectCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Vehicle No", "Date"}));
+        selectCombo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                selectComboActionPerformed(evt);
+            }
+        });
+
+        jLabel3.setText(" Vehicle Number : ");
+
         javax.swing.GroupLayout mainPanelLayout = new javax.swing.GroupLayout(mainPanel);
         mainPanel.setLayout(mainPanelLayout);
         mainPanelLayout.setHorizontalGroup(
@@ -112,14 +131,7 @@ public class HistoryForm extends javax.swing.JFrame {
                         .addComponent(jSeparator4))
                     .addGroup(mainPanelLayout.createSequentialGroup()
                         .addGap(6, 6, 6)
-                        .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 943, Short.MAX_VALUE)
-                            .addGroup(mainPanelLayout.createSequentialGroup()
-                                .addComponent(jLabel1)
-                                .addGap(18, 18, 18)
-                                .addComponent(vehicleNoCombo, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(62, 62, 62)
-                                .addComponent(searchBtn)))))
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 943, Short.MAX_VALUE)))
                 .addGap(2, 2, 2))
             .addGroup(mainPanelLayout.createSequentialGroup()
                 .addComponent(jSeparator3)
@@ -128,19 +140,41 @@ public class HistoryForm extends javax.swing.JFrame {
                 .addGap(0, 0, Short.MAX_VALUE)
                 .addComponent(prviewBtn)
                 .addContainerGap())
+            .addGroup(mainPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel1)
+                    .addComponent(jLabel3))
+                .addGap(13, 13, 13)
+                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(selectCombo, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(vehicleNoCombo, 0, 128, Short.MAX_VALUE))
+                .addGap(58, 58, 58)
+                .addComponent(jLabel2)
+                .addGap(18, 18, 18)
+                .addComponent(datePicker, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(searchBtn)
+                .addGap(27, 27, 27))
         );
         mainPanelLayout.setVerticalGroup(
             mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(mainPanelLayout.createSequentialGroup()
-                .addContainerGap(43, Short.MAX_VALUE)
+                .addGap(26, 26, 26)
                 .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
+                    .addComponent(selectCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel1))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 31, Short.MAX_VALUE)
+                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(vehicleNoCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(searchBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(vehicleNoCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                    .addComponent(jLabel2)
+                    .addComponent(datePicker, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3))
+                .addGap(22, 22, 22)
                 .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 568, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 518, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator4, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -171,7 +205,15 @@ public class HistoryForm extends javax.swing.JFrame {
     }//GEN-LAST:event_itemTabelInputMethodTextChanged
 
     private void searchBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchBtnActionPerformed
-        List<Invoice> invoiceList = InvoiceDao.getVehicleHistory(vehicleNoCombo.getSelectedItem().toString());
+        List<Invoice> invoiceList = new ArrayList<>();
+        if(!selectCombo.getSelectedItem().toString().equals("Date")){
+            invoiceList = InvoiceDao.getHistoryByVehicle(vehicleNoCombo.getSelectedItem().toString());
+        }else{
+            String formattedDate = new SimpleDateFormat("yyyy-MM-dd").format(datePicker.getDate());
+            System.out.println(formattedDate);
+            invoiceList = InvoiceDao.getHistoryByDate(formattedDate);
+        }
+        
         DefaultTableModel defaultTableModel = (DefaultTableModel) itemTabel.getModel();
         for (int i = 0 ;i<itemTabel.getRowCount(); i++) {
             defaultTableModel.removeRow(i);
@@ -181,6 +223,16 @@ public class HistoryForm extends javax.swing.JFrame {
         }
 
     }//GEN-LAST:event_searchBtnActionPerformed
+
+    private void selectComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectComboActionPerformed
+        if(selectCombo.getSelectedItem().toString().equals("Date")){
+            vehicleNoCombo.setEnabled(false);
+            datePicker.setEnabled(true);
+        }else{
+            vehicleNoCombo.setEnabled(true);
+            datePicker.setEnabled(false);
+        }
+    }//GEN-LAST:event_selectComboActionPerformed
 
     public void getVehicleNumbers() {
     }
@@ -221,14 +273,18 @@ public class HistoryForm extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private org.jdesktop.swingx.JXDatePicker datePicker;
     private javax.swing.JTable itemTabel;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator3;
     private javax.swing.JSeparator jSeparator4;
     private javax.swing.JPanel mainPanel;
     private javax.swing.JButton prviewBtn;
     private javax.swing.JButton searchBtn;
+    private javax.swing.JComboBox<String> selectCombo;
     private javax.swing.JComboBox<String> vehicleNoCombo;
     // End of variables declaration//GEN-END:variables
 }

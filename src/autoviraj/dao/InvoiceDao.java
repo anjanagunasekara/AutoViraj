@@ -106,7 +106,7 @@ public class InvoiceDao {
         try {
             Connection con = ConnectionFactory.getConnection();
             Statement stmt = con.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * FROM 'invoice'");
+            ResultSet rs = stmt.executeQuery("SELECT MAX(INVOICE_ID) FROM INVOICE");
             if (rs.next()) {
                 invoiceNo = rs.getInt("MAX(INVOICE_ID)");
             }
@@ -118,12 +118,38 @@ public class InvoiceDao {
         }
     }
 
-    public static List<Invoice> getVehicleHistory(String regNo) {
+    public static List<Invoice> getHistoryByVehicle(String regNo) {
         List<Invoice> vehicleHistory = new ArrayList<>();
         try {
             Connection con = ConnectionFactory.getConnection();
             Statement stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT  i.INVOICE_ID, i.DATE, i.SUB_TOTAL, i.DISCOUNT, i.NET_TOTAL, v.VEHICLE_ID,c.NAME FROM invoice i join vehicle v join customer c where i.VEHICLE_ID = v.VEHICLE_ID and v.CUSTOMER_ID = c.CUSTOMER_ID and v.REG_NO = '"+regNo+"' ");
+            while (rs.next()) {
+                Invoice i = new Invoice();
+                i.setDate(rs.getDate("DATE"));
+                i.setDiscount(rs.getInt("DISCOUNT"));
+                i.setSubtotal(rs.getInt("SUB_TOTAL"));
+                i.setNetTotal(rs.getInt("NET_TOTAL"));
+                i.setInvoiceId(rs.getInt("INVOICE_ID"));
+                Customer c = new Customer();
+                c.setName(rs.getString("NAME"));
+                i.setCustomer(c);
+                vehicleHistory.add(i);
+            }
+            return vehicleHistory;
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            return vehicleHistory;
+        }
+    }
+    
+    public static List<Invoice> getHistoryByDate(String date) {
+        List<Invoice> vehicleHistory = new ArrayList<>();
+        try {
+            Connection con = ConnectionFactory.getConnection();
+            Statement stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT  i.INVOICE_ID, i.DATE, i.SUB_TOTAL, i.DISCOUNT, i.NET_TOTAL, v.VEHICLE_ID,c.NAME FROM invoice i join vehicle v join customer c where i.VEHICLE_ID = v.VEHICLE_ID and v.CUSTOMER_ID = c.CUSTOMER_ID and i.DATE = '"+date+"' ");
             while (rs.next()) {
                 Invoice i = new Invoice();
                 i.setDate(rs.getDate("DATE"));
