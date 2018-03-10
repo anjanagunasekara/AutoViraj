@@ -97,5 +97,23 @@ public class InvoiceDao {
         }
 
     }
+    
+    public static int getLastInvoiceNo(){
+        int invoiceNo = 0;
+        try {
+            Connection con = ConnectionFactory.getConnection();
+            Statement stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT MAX(INVOICE_ID) FROM `invoice`");
+            if(rs.next())
+            {
+                invoiceNo = rs.getInt("MAX(INVOICE_ID)");
+            }
+            return invoiceNo;
+            
+         } catch (SQLException ex) {
+           ex.printStackTrace();
+           return -1;
+        }
+    }
 
 }

@@ -5,6 +5,7 @@
  */
 package autoviraj.gui;
 
+import autoviraj.dao.InvoiceDao;
 import autoviraj.models.Customer;
 import autoviraj.models.Invoice;
 import autoviraj.models.InvoiceItem;
@@ -59,6 +60,8 @@ public class InvoiceFrame extends javax.swing.JFrame {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        invoiceNoTxt.setText((InvoiceDao.getLastInvoiceNo()+1) + "");
+        jobNoTxt.setText("1");
         datePicker.setDate(new Date());
         this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         addWindowListener(new WindowAdapter() {
@@ -565,11 +568,11 @@ public class InvoiceFrame extends javax.swing.JFrame {
             for (int i = 0; i < itemTabel.getRowCount(); i++) {
                 double rowTotal = 0;
                 try {
-                    rowTotal = Double.parseDouble(itemTabel.getModel().getValueAt(i, 1).toString()) * Double.parseDouble(itemTabel.getModel().getValueAt(i, 2).toString());
+                    rowTotal = Double.parseDouble(itemTabel.getModel().getValueAt(i, 2).toString()) * Double.parseDouble(itemTabel.getModel().getValueAt(i, 3).toString());
                     itemTotal += rowTotal;
                 } catch (Exception e) {
                 }
-                itemTabel.getModel().setValueAt(rowTotal, i, 3);
+                itemTabel.getModel().setValueAt(rowTotal, i, 4);
             }
             matTotalTxt.setText((itemTotal - itemTotal * itemDiscount) + "");
             matDiscountAmnt.setText((itemDiscount) * itemTotal + "");
@@ -584,6 +587,7 @@ public class InvoiceFrame extends javax.swing.JFrame {
             } catch (Exception e) {
             }
             grandTotalTxt.setText(serviceFinal + itemFinal + "");
+            grandTotal = serviceFinal+itemFinal;
         }
     }//GEN-LAST:event_itemTabelKeyReleased
 
@@ -598,6 +602,8 @@ public class InvoiceFrame extends javax.swing.JFrame {
                 if (serviceMap.containsKey(code)) {
                     serviceTabel.getModel().setValueAt(serviceMap.get(code).getName(), serviceTabel.getSelectedRow(), 1);
                     serviceTabel.getModel().setValueAt(serviceMap.get(code).getPrice(), serviceTabel.getSelectedRow(), 2);
+                    serviceTabel.getModel().setValueAt(1, serviceTabel.getSelectedRow(), 3);
+                    serviceTabel.getModel().setValueAt(1 * serviceMap.get(code).getPrice(), serviceTabel.getSelectedRow(), 4);
                 }
                 if (serviceTabel.getSelectedRow() + 1 == serviceTabel.getRowCount()) {
                     DefaultTableModel defaultTableModel = (DefaultTableModel) serviceTabel.getModel();
@@ -608,11 +614,11 @@ public class InvoiceFrame extends javax.swing.JFrame {
             for (int i = 0; i < serviceTabel.getRowCount(); i++) {
                 double rowTotal = 0;
                 try {
-                    rowTotal = Double.parseDouble(serviceTabel.getModel().getValueAt(i,serviceTabel.getColumnCount()-1 ).toString());
+                    rowTotal = Double.parseDouble(serviceTabel.getModel().getValueAt(i, 2).toString()) * Double.parseDouble(serviceTabel.getModel().getValueAt(i, 3).toString());
                     serviceTotal += rowTotal;
                 } catch (Exception e) {
                 }
-                serviceTabel.getModel().setValueAt(rowTotal, i, 1);
+                serviceTabel.getModel().setValueAt(rowTotal, i, 4);
             }
             serviceTotalTxt.setText((serviceTotal - serviceTotal * serviceDiscountA) + "");
             serviceDiscountAmnt.setText(serviceDiscountA * serviceTotal + "");
@@ -627,6 +633,7 @@ public class InvoiceFrame extends javax.swing.JFrame {
             } catch (Exception e) {
             }
             grandTotalTxt.setText(serviceFinal + itemFinal + "");
+            grandTotal = serviceFinal+itemFinal;
         }
     }//GEN-LAST:event_serviceTabelKeyReleased
 
@@ -648,6 +655,7 @@ public class InvoiceFrame extends javax.swing.JFrame {
             } catch (Exception e) {
             }
             grandTotalTxt.setText(serviceFinal + itemFinal + "");
+            grandTotal = serviceFinal+itemFinal;
         } catch (Exception e) {
         }
     }//GEN-LAST:event_serviceDiscountActionPerformed
@@ -670,6 +678,7 @@ public class InvoiceFrame extends javax.swing.JFrame {
             } catch (Exception e) {
             }
             grandTotalTxt.setText(serviceFinal + itemFinal + "");
+            grandTotal = serviceFinal+itemFinal;
         } catch (Exception e) {
         }
     }//GEN-LAST:event_matDiscountActionPerformed
@@ -689,64 +698,66 @@ public class InvoiceFrame extends javax.swing.JFrame {
         ArrayList<InvoiceItem> itemList = new ArrayList<>();
         ArrayList<InvoiceService> serviceList = new ArrayList<>();
 
-        for (int i = 0; i <itemTabel.getModel().getRowCount(); i++) {
-            InvoiceItem invoiceItem = new InvoiceItem();
-            invoiceItem.setItemId(itemTabel.getModel().getValueAt( i, 0)+"");
-            invoiceItem.setName(itemTabel.getModel().getValueAt( i, 1)+"");
-            invoiceItem.setUnitPrice(Double.parseDouble(itemTabel.getModel().getValueAt( i, 2).toString()));
-            invoiceItem.setUnits(Double.parseDouble(itemTabel.getModel().getValueAt( i, 3).toString()));
-            invoiceItem.setUnitName("Nos");
-            itemList.add(invoiceItem);
+        for (int i = 0; i < itemTabel.getModel().getRowCount(); i++) {
+            if (itemTabel.getModel().getValueAt(i, 0) != null && itemTabel.getModel().getValueAt(i, 0).toString().trim() != "") {
+                InvoiceItem invoiceItem = new InvoiceItem();
+                invoiceItem.setItemId(itemTabel.getModel().getValueAt(i, 0) + "");
+                invoiceItem.setName(itemTabel.getModel().getValueAt(i, 1) + "");
+                invoiceItem.setUnitPrice(Double.parseDouble(itemTabel.getModel().getValueAt(i, 2).toString()));
+                invoiceItem.setUnits(Double.parseDouble(itemTabel.getModel().getValueAt(i, 3).toString()));
+                invoiceItem.setUnitName(" Nos");
+                itemList.add(invoiceItem);
+            }
         }
-        
-        for (int i = 0; i <serviceTabel.getModel().getRowCount(); i++) {
-            InvoiceService invoiceService = new InvoiceService();
-            invoiceService.setServiceId(serviceTabel.getModel().getValueAt( i, 0)+"");
-            invoiceService.setName(serviceTabel.getModel().getValueAt( i, 1)+"");
-            invoiceService.setUnitPrice(0);
-            invoiceService.setUnits(Double.parseDouble(serviceTabel.getModel().getValueAt( i, 3).toString()));
-            invoiceService.setUnitName("Nos");
-            serviceList.add(invoiceService);
+
+        for (int i = 0; i < serviceTabel.getModel().getRowCount(); i++) {
+            if (serviceTabel.getModel().getValueAt(i, 0) != null && serviceTabel.getModel().getValueAt(i, 0).toString().trim() != "") {
+                InvoiceService invoiceService = new InvoiceService();
+                invoiceService.setServiceId(serviceTabel.getModel().getValueAt(i, 0) + "");
+                invoiceService.setName(serviceTabel.getModel().getValueAt(i, 1) + "");
+                invoiceService.setUnitPrice(Double.parseDouble(serviceTabel.getModel().getValueAt(i, 2).toString()));
+                invoiceService.setUnits(Double.parseDouble(serviceTabel.getModel().getValueAt(i, 3).toString()));
+                invoiceService.setUnitName(" Nos");
+                serviceList.add(invoiceService);
+            }
         }
 
         Invoice i = new Invoice();
         i.setInvoiceItems(itemList);
         i.setInvoiceServices(serviceList);
-        i.setSubtotal(grandTotal+serviceDiscountA+itemDiscount);
+        i.setSubtotal(grandTotal + serviceDiscountA + itemDiscount);
         i.setDiscount(itemDiscount);
         i.setNetTotal(grandTotal);
         i.setDate(datePicker.getDate());
-        
+
         i.setCustomer(c);
         i.setVehicle(v);
-        
+
         try {
-             PrintInvoice.printInvoice(i);
+            PrintInvoice.printInvoice(i);
         } catch (Exception e) {
             System.out.println(e);
         }
-       
         
-        
-        if (true) {
+        if (InvoiceDao.saveInvoice(i)) {
             URL f = getClass().getResource("/resources/invoice.pdf");
-        SwingController controller = new SwingController();
-        SwingViewBuilder factory = new SwingViewBuilder(controller);
-        JPanel viewerComponentPanel = factory.buildViewerPanel();
-        controller.getDocumentViewController().setAnnotationCallback(new org.icepdf.ri.common.MyAnnotationCallback(controller.getDocumentViewController()));
-        JFrame applicationFrame = new JFrame();//applicationFrame.getContentPane().add(viewerComponentPanel);
-        applicationFrame.add(viewerComponentPanel);
-        controller.openDocument(f);
-        applicationFrame.pack();
-        applicationFrame.setVisible(true);
-        applicationFrame.setLocationRelativeTo(null);
-        applicationFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-        applicationFrame.addWindowListener(new WindowAdapter() {
-            @Override
-            public void windowClosing(WindowEvent we) {
-                applicationFrame.dispose();
-            }
-        });
+            SwingController controller = new SwingController();
+            SwingViewBuilder factory = new SwingViewBuilder(controller);
+            JPanel viewerComponentPanel = factory.buildViewerPanel();
+            controller.getDocumentViewController().setAnnotationCallback(new org.icepdf.ri.common.MyAnnotationCallback(controller.getDocumentViewController()));
+            JFrame applicationFrame = new JFrame();//applicationFrame.getContentPane().add(viewerComponentPanel);
+            applicationFrame.add(viewerComponentPanel);
+            controller.openDocument(f);
+            applicationFrame.pack();
+            applicationFrame.setVisible(true);
+            applicationFrame.setLocationRelativeTo(null);
+            applicationFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+            applicationFrame.addWindowListener(new WindowAdapter() {
+                @Override
+                public void windowClosing(WindowEvent we) {
+                    applicationFrame.dispose();
+                }
+            });
         } else {
             JOptionPane.showMessageDialog(null, "Error occured!", "Error", JOptionPane.ERROR_MESSAGE);
         }

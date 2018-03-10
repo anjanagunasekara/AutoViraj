@@ -29,16 +29,21 @@ public class ItemDao {
                 Item item = new Item();
                 item.setItemId(rs.getString("ITEM_ID"));
                 item.setName(rs.getString("NAME"));
-                item.setPrice(rs.getDouble("PRICE"));
+                item.setPrice(rs.getDouble("UNIT_PRICE"));
                 item.setUnitName(rs.getString("UNIT_NAME"));
                 items.add(item);
             }
             return items;
             
          } catch (SQLException ex) {
-           System.err.println("ex");
+           ex.printStackTrace();
            return null;
         }
 
        }
+    public static void main(String[] args) {
+        getAllItems();
+        System.out.println(getAllItems().get(0).getName());
+    }
+       
 }
