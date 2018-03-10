@@ -5,6 +5,12 @@
  */
 package autoviraj.gui;
 
+import autoviraj.dao.InvoiceDao;
+import autoviraj.dao.VehicleDao;
+import autoviraj.models.Invoice;
+import autoviraj.models.Vehicle;
+import java.util.List;
+import javax.swing.table.DefaultTableModel;
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 
 /**
@@ -12,15 +18,18 @@ import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
  * @author anjanag
  */
 public class HistoryForm extends javax.swing.JFrame {
+
     String[] vehicleMap = {"GL-0325", "CAA-1232", "CAB-2342", "KA-2323", "KL-2334", "HI-3232", "GE-2323"};
+
     /**
      * Creates new form HistoryForm
      */
     public HistoryForm() {
         initComponents();
         vehicleNoCombo.removeAllItems();
-        for(String s : vehicleMap)
-            vehicleNoCombo.addItem(s);
+        for (Vehicle s : VehicleDao.getAllVehicles()) {
+            vehicleNoCombo.addItem(s.getRegNo());
+        }
         AutoCompleteDecorator.decorate(vehicleNoCombo);
     }
 
@@ -39,9 +48,9 @@ public class HistoryForm extends javax.swing.JFrame {
         itemTabel = new javax.swing.JTable();
         jSeparator3 = new javax.swing.JSeparator();
         jSeparator4 = new javax.swing.JSeparator();
-        newCustBtn = new javax.swing.JButton();
-        newCustBtn1 = new javax.swing.JButton();
+        searchBtn = new javax.swing.JButton();
         vehicleNoCombo = new javax.swing.JComboBox<>();
+        prviewBtn = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -49,14 +58,14 @@ public class HistoryForm extends javax.swing.JFrame {
 
         itemTabel.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null}
+                {null, null, null, null, null, null}
             },
             new String [] {
-                "Item", "Rate", "Qty", "Total"
+                "Invoice ID", "Date", "Customer", "Discount", "Sub Total", "Net Total"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class
+                java.lang.Object.class, java.lang.String.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -77,14 +86,20 @@ public class HistoryForm extends javax.swing.JFrame {
             }
         });
         jScrollPane1.setViewportView(itemTabel);
+        itemTabel.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_INTERVAL_SELECTION);
 
-        newCustBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/new customer.png"))); // NOI18N
-        newCustBtn.setText("New Customer");
-
-        newCustBtn1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/new customer.png"))); // NOI18N
-        newCustBtn1.setText("Search");
+        searchBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/new customer.png"))); // NOI18N
+        searchBtn.setText("Search");
+        searchBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                searchBtnActionPerformed(evt);
+            }
+        });
 
         vehicleNoCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "GL-0325", "CAA-2912", "CAB-8237", "KA-3423" }));
+
+        prviewBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/back.png"))); // NOI18N
+        prviewBtn.setText("Back");
 
         javax.swing.GroupLayout mainPanelLayout = new javax.swing.GroupLayout(mainPanel);
         mainPanel.setLayout(mainPanelLayout);
@@ -104,16 +119,15 @@ public class HistoryForm extends javax.swing.JFrame {
                                 .addGap(18, 18, 18)
                                 .addComponent(vehicleNoCombo, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(62, 62, 62)
-                                .addComponent(newCustBtn1)))))
+                                .addComponent(searchBtn)))))
                 .addGap(2, 2, 2))
             .addGroup(mainPanelLayout.createSequentialGroup()
                 .addComponent(jSeparator3)
                 .addContainerGap())
-            .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(mainPanelLayout.createSequentialGroup()
-                    .addGap(403, 403, 403)
-                    .addComponent(newCustBtn)
-                    .addContainerGap(403, Short.MAX_VALUE)))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, mainPanelLayout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(prviewBtn)
+                .addContainerGap())
         );
         mainPanelLayout.setVerticalGroup(
             mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -121,7 +135,7 @@ public class HistoryForm extends javax.swing.JFrame {
                 .addContainerGap(43, Short.MAX_VALUE)
                 .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
-                    .addComponent(newCustBtn1, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(searchBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(vehicleNoCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -129,12 +143,9 @@ public class HistoryForm extends javax.swing.JFrame {
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 568, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator4, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(62, 62, 62))
-            .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(mainPanelLayout.createSequentialGroup()
-                    .addGap(368, 368, 368)
-                    .addComponent(newCustBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(368, Short.MAX_VALUE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(prviewBtn)
+                .addGap(22, 22, 22))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -152,15 +163,28 @@ public class HistoryForm extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void itemTabelKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_itemTabelKeyReleased
-        
+
     }//GEN-LAST:event_itemTabelKeyReleased
 
     private void itemTabelInputMethodTextChanged(java.awt.event.InputMethodEvent evt) {//GEN-FIRST:event_itemTabelInputMethodTextChanged
 
     }//GEN-LAST:event_itemTabelInputMethodTextChanged
 
-    public void getVehicleNumbers(){
+    private void searchBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchBtnActionPerformed
+        List<Invoice> invoiceList = InvoiceDao.getVehicleHistory(vehicleNoCombo.getSelectedItem().toString());
+        DefaultTableModel defaultTableModel = (DefaultTableModel) itemTabel.getModel();
+        for (int i = 0 ;i<itemTabel.getRowCount(); i++) {
+            defaultTableModel.removeRow(i);
+        }
+        for (Invoice i : invoiceList) {
+            defaultTableModel.addRow(new Object[]{i.getInvoiceId(), i.getDate().toString(), i.getCustomer().getName(), i.getDiscount(), i.getSubtotal(), i.getNetTotal()});
+        }
+
+    }//GEN-LAST:event_searchBtnActionPerformed
+
+    public void getVehicleNumbers() {
     }
+
     /**
      * @param args the command line arguments
      */
@@ -203,8 +227,8 @@ public class HistoryForm extends javax.swing.JFrame {
     private javax.swing.JSeparator jSeparator3;
     private javax.swing.JSeparator jSeparator4;
     private javax.swing.JPanel mainPanel;
-    private javax.swing.JButton newCustBtn;
-    private javax.swing.JButton newCustBtn1;
+    private javax.swing.JButton prviewBtn;
+    private javax.swing.JButton searchBtn;
     private javax.swing.JComboBox<String> vehicleNoCombo;
     // End of variables declaration//GEN-END:variables
 }

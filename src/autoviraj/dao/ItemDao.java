@@ -12,20 +12,20 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+
 /**
  *
  * @author Sehan Rathnayake
  */
 public class ItemDao {
-  
-    public static ArrayList<Item> getAllItems(){
-       try {
+
+    public static ArrayList<Item> getAllItems() {
+        try {
             Connection con = ConnectionFactory.getConnection();
             Statement stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT * FROM ITEM");
-            ArrayList<Item> items= new ArrayList<Item>();
-            if(rs.next())
-            {
+            ArrayList<Item> items = new ArrayList<Item>();
+            if (rs.next()) {
                 Item item = new Item();
                 item.setItemId(rs.getString("ITEM_ID"));
                 item.setName(rs.getString("NAME"));
@@ -34,16 +34,17 @@ public class ItemDao {
                 items.add(item);
             }
             return items;
-            
-         } catch (SQLException ex) {
-           ex.printStackTrace();
-           return null;
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            return null;
         }
 
-       }
+    }
+
     public static void main(String[] args) {
         getAllItems();
         System.out.println(getAllItems().get(0).getName());
     }
-       
+
 }

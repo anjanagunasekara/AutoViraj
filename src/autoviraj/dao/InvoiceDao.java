@@ -5,6 +5,7 @@
  */
 package autoviraj.dao;
 
+import autoviraj.models.Customer;
 import autoviraj.models.Invoice;
 import autoviraj.models.InvoiceItem;
 import autoviraj.models.InvoiceService;
@@ -15,7 +16,9 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  *
@@ -31,7 +34,7 @@ public class InvoiceDao {
         try {
             Connection con = ConnectionFactory.getConnection();
             con.setAutoCommit(false);
-           String insertInvoiceSQL = "INSERT INTO INVOICE"
+            String insertInvoiceSQL = "INSERT INTO INVOICE"
                     + "(CUSTOMER_ID,VEHICLE_ID,DATE,SUB_TOTAL,DISCOUNT,NET_TOTAL,CURRENT_METER,NEXT_SERVICE) VALUES"
                     + "(?,?,?,?,?,?,?,?)";
 
@@ -97,22 +100,47 @@ public class InvoiceDao {
         }
 
     }
-    
-    public static int getLastInvoiceNo(){
+
+    public static int getLastInvoiceNo() {
         int invoiceNo = 0;
         try {
             Connection con = ConnectionFactory.getConnection();
             Statement stmt = con.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT MAX(INVOICE_ID) FROM `invoice`");
-            if(rs.next())
-            {
+            ResultSet rs = stmt.executeQuery("SELECT * FROM 'invoice'");
+            if (rs.next()) {
                 invoiceNo = rs.getInt("MAX(INVOICE_ID)");
             }
             return invoiceNo;
-            
-         } catch (SQLException ex) {
-           ex.printStackTrace();
-           return -1;
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            return -1;
+        }
+    }
+
+    public static List<Invoice> getVehicleHistory(String regNo) {
+        List<Invoice> vehicleHistory = new ArrayList<>();
+        try {
+            Connection con = ConnectionFactory.getConnection();
+            Statement stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT  i.INVOICE_ID, i.DATE, i.SUB_TOTAL, i.DISCOUNT, i.NET_TOTAL, v.VEHICLE_ID,c.NAME FROM invoice i join vehicle v join customer c where i.VEHICLE_ID = v.VEHICLE_ID and v.CUSTOMER_ID = c.CUSTOMER_ID and v.REG_NO = '"+regNo+"' ");
+            while (rs.next()) {
+                Invoice i = new Invoice();
+                i.setDate(rs.getDate("DATE"));
+                i.setDiscount(rs.getInt("DISCOUNT"));
+                i.setSubtotal(rs.getInt("SUB_TOTAL"));
+                i.setNetTotal(rs.getInt("NET_TOTAL"));
+                i.setInvoiceId(rs.getInt("INVOICE_ID"));
+                Customer c = new Customer();
+                c.setName(rs.getString("NAME"));
+                i.setCustomer(c);
+                vehicleHistory.add(i);
+            }
+            return vehicleHistory;
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            return vehicleHistory;
         }
     }
 
