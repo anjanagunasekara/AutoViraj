@@ -30,5 +30,12 @@ public class PdfUtils {
         String dateStr = simpleDateFormat.format(date);
         return dateStr;
     }
+    
+    public static String formatMeterReading (double reading) {
+        if(reading == 0)return "";
+        else return String.valueOf(reading);        
+    }
+    
+    
 
 }

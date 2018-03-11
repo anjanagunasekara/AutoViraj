@@ -33,7 +33,8 @@ public class PrintInvoice {
     /**
      * @param args the command line arguments
      */
-    
+    private static BaseColor themeColor = BaseColor.RED;
+
     public static void printInvoice(Invoice invoice) throws Exception {
 
         Document layoutDocument = new Document();
@@ -51,37 +52,89 @@ public class PrintInvoice {
 
     public static void addTitle(Document layoutDocument) throws DocumentException {
         try {
-            Image img = Image.getInstance("C:\\Users\\Sehan Rathnayake\\Pictures\\garage.jpg");
-            img.scaleToFit(80, 80);
+
+            Image img = Image.getInstance("src/resources/Berner_logo.jpg");
+            img.scaleToFit(180, 180);
             img.setAlignment(Image.MIDDLE);
             layoutDocument.add(img);
 
             Font boldFont = new Font(Font.FontFamily.HELVETICA, 16, Font.BOLD);
             Paragraph title = new Paragraph("SERVICE INVOICE", boldFont);
-            title.setAlignment(Element.ALIGN_CENTER);
-            layoutDocument.add(title);
-            
-            PdfPTable invoiceNoTable = new PdfPTable(new float[]{400,120,80});
-            PdfPCell emptycell=new PdfPCell(new Paragraph(""));
+            PdfPCell titleCell = new PdfPCell(title);
+            titleCell.setBorder(PdfPCell.NO_BORDER);
+            titleCell.setHorizontalAlignment(Element.ALIGN_CENTER);
+            titleCell.setColspan(3);
+
+            PdfPCell emptycell = new PdfPCell(new Paragraph(""));
             emptycell.setBorder(PdfPCell.NO_BORDER);
-            
-            invoiceNoTable.addCell(emptycell);
-            
+            emptycell.setRowspan(2);
+
+            PdfPTable header = new PdfPTable(new float[]{50, 50, 70});
+            Font addressFont = new Font(Font.FontFamily.HELVETICA, 8);
+
+            Phrase address1 = new Phrase();
+            address1.add(new Chunk("BERNER Head Office\n", new Font(Font.FontFamily.HELVETICA, 10, Font.BOLD)));
+            address1.add(new Chunk("Ignite Enterprises,\nNelumkanuwa,\nKatupotha,\nKurunegala.", addressFont));
+
+            PdfPCell address1Cell = new PdfPCell(address1);
+
+            address1Cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+            address1Cell.setBorder(PdfPCell.NO_BORDER);
+
+            Phrase address2 = new Phrase();
+            address2.add(new Chunk("BERNER Automobile\nPromotion Team\n", new Font(Font.FontFamily.HELVETICA, 10, Font.BOLD)));
+            address2.add(new Chunk("187/B Thalalla east,\nKekanadura,\nMatara.", addressFont));
+
+            PdfPCell address2Cell = new PdfPCell(address2);
+            address2Cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+            address2Cell.setBorder(PdfPCell.NO_BORDER);
+
+            Paragraph telephone1 = new Paragraph("Tel/Fax : +94375734208\nE-mail : ignite.lanka@gmail.com\nWeb : www.berner.eu", addressFont);
+            PdfPCell telephone1Cell = new PdfPCell(telephone1);
+            telephone1Cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+            telephone1Cell.setBorder(PdfPCell.NO_BORDER);
+
+            Paragraph telephone2 = new Paragraph("Tel : +9412258244\nMob : +94719969039\nE-mail : bernerautomobile.gmail.com", addressFont);
+            PdfPCell telephone2Cell = new PdfPCell(telephone2);
+            telephone2Cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+
+            telephone2Cell.setBorder(PdfPCell.NO_BORDER);
+
+            PdfPCell emptyCell2 = new PdfPCell(new Paragraph(" "));
+            emptyCell2.setColspan(3);
+            emptyCell2.setBorder(PdfPCell.NO_BORDER);
+
+            header.addCell(titleCell);
+            header.addCell(emptyCell2);
+            header.addCell(address1Cell);
+            header.addCell(address2Cell);
+            header.addCell(emptycell);
+            header.addCell(telephone1Cell);
+            header.addCell(telephone2Cell);
+
+            layoutDocument.add(header);
+
+            PdfPTable invoiceNoTable = new PdfPTable(new float[]{400, 120, 80});
+            PdfPCell emptycell2 = new PdfPCell(new Paragraph(""));
+            emptycell2.setBorder(PdfPCell.NO_BORDER);
+
+            invoiceNoTable.addCell(emptycell2);
+
             Font invoiceNoHeadingFont = new Font(Font.FontFamily.HELVETICA, 12, Font.BOLD);
-            Paragraph invoiceNoHeading = new Paragraph("Invoice No : ",invoiceNoHeadingFont);
-            PdfPCell invoiceNoHeadingCell =new PdfPCell(invoiceNoHeading);
+            Paragraph invoiceNoHeading = new Paragraph("Invoice No : ", invoiceNoHeadingFont);
+            PdfPCell invoiceNoHeadingCell = new PdfPCell(invoiceNoHeading);
             invoiceNoHeadingCell.setBorder(PdfPCell.NO_BORDER);
-            
+
             Font invoiceNoValueFont = new Font(Font.FontFamily.HELVETICA, 12, Font.BOLD);
-            invoiceNoValueFont.setColor(BaseColor.ORANGE);
-            Paragraph invoiceNoValue = new Paragraph("0001",invoiceNoValueFont);
-            PdfPCell invoiceNoValueCell =new PdfPCell(invoiceNoValue);
+            invoiceNoValueFont.setColor(themeColor);
+            Paragraph invoiceNoValue = new Paragraph("0001", invoiceNoValueFont);
+            PdfPCell invoiceNoValueCell = new PdfPCell(invoiceNoValue);
             invoiceNoValueCell.setBorder(PdfPCell.NO_BORDER);
-            
+
             invoiceNoTable.addCell(invoiceNoHeadingCell);
             invoiceNoTable.addCell(invoiceNoValueCell);
             layoutDocument.add(invoiceNoTable);
-            
+
         } catch (BadElementException ex) {
             System.out.println(ex);
         } catch (IOException ex) {
@@ -90,10 +143,10 @@ public class PrintInvoice {
     }
 
     public static void addTable(Document layoutDocument, Invoice invoice) throws DocumentException {
-        
+
         Font headingFont = new Font(Font.FontFamily.HELVETICA, 10);
         Font valueFont = new Font(Font.FontFamily.COURIER, 10);
-                
+
         PdfPTable table = new PdfPTable(new float[]{50, 230, 70, 70, 80});
 
         PdfPTable customerTable = new PdfPTable(new float[]{35, 85});
@@ -128,56 +181,56 @@ public class PrintInvoice {
         customerCell.setCellEvent(cellBackgroundCustomer);
         table.addCell(customerCell);
 
-        PdfPTable vehicleInfoTable = new PdfPTable(new float[]{50,5,60});
+        PdfPTable vehicleInfoTable = new PdfPTable(new float[]{50, 5, 60});
 
-        Paragraph dateHeading = new Paragraph("  Date",headingFont);
+        Paragraph dateHeading = new Paragraph("  Date", headingFont);
         PdfPCell dateHeadingCell = new PdfPCell(dateHeading);
         dateHeadingCell.setBorder(PdfPCell.NO_BORDER);
 
-        Paragraph dateValue= new Paragraph(PdfUtils.formatDate(invoice.getDate()),valueFont);
+        Paragraph dateValue = new Paragraph(PdfUtils.formatDate(invoice.getDate()), valueFont);
         PdfPCell dateValueCell = new PdfPCell(dateValue);
         dateValueCell.setBorder(PdfPCell.NO_BORDER);
 
-        Paragraph vehicleNoHeading = new Paragraph("  Vehicle No",headingFont);
+        Paragraph vehicleNoHeading = new Paragraph("  Vehicle No", headingFont);
         PdfPCell vehicleNoHeadingCell = new PdfPCell(vehicleNoHeading);
         vehicleNoHeadingCell.setBorder(PdfPCell.NO_BORDER);
 
-        Paragraph vehicleNoValue = new Paragraph(invoice.getVehicle().getRegNo(),valueFont);
+        Paragraph vehicleNoValue = new Paragraph(invoice.getVehicle().getRegNo(), valueFont);
         PdfPCell vehicleNoValueCell = new PdfPCell(vehicleNoValue);
         vehicleNoValueCell.setBorder(PdfPCell.NO_BORDER);
 
-        Paragraph vehicleTypeHeading = new Paragraph("  Vehicle Type",headingFont);
+        Paragraph vehicleTypeHeading = new Paragraph("  Vehicle Type", headingFont);
         PdfPCell vehicleTypeHeadingCell = new PdfPCell(vehicleTypeHeading);
         vehicleTypeHeadingCell.setBorder(PdfPCell.NO_BORDER);
 
-        Paragraph vehicleTypeValue = new Paragraph(invoice.getVehicle().getType(),valueFont);
+        Paragraph vehicleTypeValue = new Paragraph(invoice.getVehicle().getType(), valueFont);
         PdfPCell vehicleTypeValueCell = new PdfPCell(vehicleTypeValue);
         vehicleTypeValueCell.setBorder(PdfPCell.NO_BORDER);
 
-        Paragraph vehicleModelHeading = new Paragraph("  Vehicle Model",headingFont);
+        Paragraph vehicleModelHeading = new Paragraph("  Vehicle Model", headingFont);
         PdfPCell vehicleModelHeadingCell = new PdfPCell(vehicleModelHeading);
         vehicleModelHeadingCell.setBorder(PdfPCell.NO_BORDER);
 
-        Paragraph vehicleModelValue = new Paragraph(invoice.getVehicle().getModel(),valueFont);
+        Paragraph vehicleModelValue = new Paragraph(invoice.getVehicle().getModel(), valueFont);
         PdfPCell vehicleModelValueCell = new PdfPCell(vehicleModelValue);
         vehicleModelValueCell.setBorder(PdfPCell.NO_BORDER);
-        
-        PdfPCell midCell = new PdfPCell(new Paragraph(":",headingFont));
+
+        PdfPCell midCell = new PdfPCell(new Paragraph(":", headingFont));
         midCell.setBorder(PdfPCell.NO_BORDER);
-        
+
         vehicleInfoTable.setSpacingBefore(4);
         vehicleInfoTable.setSpacingAfter(8);
         vehicleInfoTable.addCell(dateHeadingCell);
         vehicleInfoTable.addCell(midCell);
         vehicleInfoTable.addCell(dateValueCell);
         vehicleInfoTable.addCell(vehicleNoHeadingCell);
-         vehicleInfoTable.addCell(midCell);
+        vehicleInfoTable.addCell(midCell);
         vehicleInfoTable.addCell(vehicleNoValueCell);
         vehicleInfoTable.addCell(vehicleTypeHeadingCell);
-         vehicleInfoTable.addCell(midCell);
+        vehicleInfoTable.addCell(midCell);
         vehicleInfoTable.addCell(vehicleTypeValueCell);
         vehicleInfoTable.addCell(vehicleModelHeadingCell);
-         vehicleInfoTable.addCell(midCell);
+        vehicleInfoTable.addCell(midCell);
         vehicleInfoTable.addCell(vehicleModelValueCell);
 
         PdfPCell others = new PdfPCell(vehicleInfoTable);
@@ -194,31 +247,31 @@ public class PrintInvoice {
         Paragraph itemIdHeading = new Paragraph("Item ID", headingFont);
         PdfPCell itemIdHeadingCell = new PdfPCell(itemIdHeading);
         itemIdHeadingCell.setHorizontalAlignment(Element.ALIGN_CENTER);
-        itemIdHeadingCell.setBackgroundColor(BaseColor.ORANGE);
+        itemIdHeadingCell.setBackgroundColor(themeColor);
         itemTable.addCell(itemIdHeadingCell);
 
         Paragraph descriptionHeading = new Paragraph("Description", headingFont);
         PdfPCell descriptionHeadingCell = new PdfPCell(descriptionHeading);
         descriptionHeadingCell.setHorizontalAlignment(Element.ALIGN_CENTER);
-        descriptionHeadingCell.setBackgroundColor(BaseColor.ORANGE);
+        descriptionHeadingCell.setBackgroundColor(themeColor);
         itemTable.addCell(descriptionHeadingCell);
 
         Paragraph quanityHeading = new Paragraph("Quantity", headingFont);
         PdfPCell quantityHeadingCell = new PdfPCell(quanityHeading);
         quantityHeadingCell.setHorizontalAlignment(Element.ALIGN_CENTER);
-        quantityHeadingCell.setBackgroundColor(BaseColor.ORANGE);
+        quantityHeadingCell.setBackgroundColor(themeColor);
         itemTable.addCell(quantityHeadingCell);
 
         Paragraph rateHeading = new Paragraph("Rate(Rs.)", headingFont);
         PdfPCell rateHeadingCell = new PdfPCell(rateHeading);
         rateHeadingCell.setHorizontalAlignment(Element.ALIGN_CENTER);
-        rateHeadingCell.setBackgroundColor(BaseColor.ORANGE);
+        rateHeadingCell.setBackgroundColor(themeColor);
         itemTable.addCell(rateHeadingCell);
 
         Paragraph amountHeading = new Paragraph("Amount(Rs.)", headingFont);
         PdfPCell amountHeadingCell = new PdfPCell(amountHeading);
         amountHeadingCell.setHorizontalAlignment(Element.ALIGN_CENTER);
-        amountHeadingCell.setBackgroundColor(BaseColor.ORANGE);
+        amountHeadingCell.setBackgroundColor(themeColor);
         itemTable.addCell(amountHeadingCell);
         // items
 
@@ -298,21 +351,46 @@ public class PrintInvoice {
         itemCell.setColspan(5);
         table.addCell(itemCell);
 
-        Paragraph total = new Paragraph("empty");
-        PdfPCell to = new PdfPCell(total);
-        to.setColspan(3);
-        to.setRowspan(4);
+        PdfPTable meterReadings = new PdfPTable(new float[]{50, 5, 60});
+
+        Paragraph currentMeterHeading = new Paragraph("  Current Meter Reading", headingFont);
+        PdfPCell currentMeterHeadingCell = new PdfPCell(currentMeterHeading);
+        currentMeterHeadingCell.setBorder(PdfPCell.NO_BORDER);
+
+        Paragraph currentMeterValue = new Paragraph(PdfUtils.formatMeterReading(invoice.getCurrentMeter()), valueFont);
+        PdfPCell currentMeterValueCell = new PdfPCell(currentMeterValue);
+        currentMeterValueCell.setBorder(PdfPCell.NO_BORDER);
+
+        Paragraph nextServiceHeading = new Paragraph("  Next Service Due", headingFont);
+        PdfPCell nextServiceHeadingCell = new PdfPCell(nextServiceHeading);
+        nextServiceHeadingCell.setBorder(PdfPCell.NO_BORDER);
+
+        Paragraph nextServiceValue = new Paragraph(PdfUtils.formatMeterReading(invoice.getNextService()), valueFont);
+        PdfPCell nextServiceValueCell = new PdfPCell(nextServiceValue);
+        nextServiceValueCell.setBorder(PdfPCell.NO_BORDER);
+
+        meterReadings.setSpacingBefore(4);
+        meterReadings.setSpacingAfter(8);
+        meterReadings.addCell(currentMeterHeadingCell);
+        meterReadings.addCell(midCell);
+        meterReadings.addCell(currentMeterValueCell);
+        meterReadings.addCell(nextServiceHeadingCell);
+        meterReadings.addCell(midCell);
+        meterReadings.addCell(nextServiceValueCell);
+
+        PdfPCell meterReadingsCell = new PdfPCell(meterReadings);
+        meterReadingsCell.setColspan(3);
+        meterReadingsCell.setRowspan(4);
         //to.setBackgroundColor(BaseColor.YELLOW);
         CellBackground cellBackgroundOther2 = new CellBackground(4, 0, 0, 4);
-        to.setBorder(PdfPCell.NO_BORDER);
-        to.setCellEvent(cellBackgroundOther2);
-        to.setBorderColor(BaseColor.RED);
+        meterReadingsCell.setBorder(PdfPCell.NO_BORDER);
+        meterReadingsCell.setCellEvent(cellBackgroundOther2);
 
-        table.addCell(to);
+        table.addCell(meterReadingsCell);
 
         Font totalFont = new Font(Font.FontFamily.HELVETICA, 10, Font.BOLD);
 
-        Paragraph subTotal = new Paragraph("Sub Total", headingFont);
+        Paragraph subTotal = new Paragraph(" Sub Total", headingFont);
         PdfPCell subTotalCell = new PdfPCell(subTotal);
         subTotalCell.setBorder(Rectangle.LEFT | Rectangle.RIGHT);
         table.addCell(subTotalCell);
@@ -323,7 +401,7 @@ public class PrintInvoice {
         subTotalValCell.setBorder(Rectangle.LEFT | Rectangle.RIGHT);
         table.addCell(subTotalValCell);
 
-        Paragraph discount = new Paragraph("Discount", headingFont);
+        Paragraph discount = new Paragraph(" Discount", headingFont);
         PdfPCell discountCell = new PdfPCell(discount);
         discountCell.setBorder(Rectangle.LEFT | Rectangle.RIGHT);
         table.addCell(discountCell);
@@ -340,7 +418,7 @@ public class PrintInvoice {
         table.addCell(emptyCell);
         table.addCell(emptyCell);
 
-        Paragraph netTotal = new Paragraph("Net total", totalFont);
+        Paragraph netTotal = new Paragraph(" Net total", totalFont);
         PdfPCell netTotalCell = new PdfPCell(netTotal);
         netTotalCell.setBorder(Rectangle.LEFT | Rectangle.RIGHT | Rectangle.BOTTOM);
         table.addCell(netTotalCell);
@@ -351,6 +429,44 @@ public class PrintInvoice {
         netTotalValCell.setHorizontalAlignment(Element.ALIGN_RIGHT);
         netTotalValCell.setBorder(Rectangle.LEFT | Rectangle.RIGHT | Rectangle.BOTTOM);
         table.addCell(netTotalValCell);
+
+        PdfPCell bottomline = new PdfPCell(new Paragraph(" "));
+        bottomline.setColspan(5);
+       // bottomline.setBorderColor(themeColor);
+        bottomline.setBorderWidth(2);
+        bottomline.setBorder(Rectangle.NO_BORDER);
+
+        table.addCell(bottomline);
+
+        PdfPTable footer = new PdfPTable(new float[]{150, 50});
+
+        Paragraph signature = new Paragraph("");
+        PdfPCell signatureCell = new PdfPCell(signature);
+        signatureCell.setBorder(PdfPCell.BOTTOM);
+
+        Paragraph cashier = new Paragraph("Cashier", headingFont);
+        PdfPCell cashierCell = new PdfPCell(cashier);
+        cashierCell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        cashierCell.setBorder(PdfPCell.NO_BORDER);
+
+        PdfPCell emptyCell2 = new PdfPCell(new Paragraph(" "));
+        emptyCell2.setColspan(2);
+        emptyCell2.setBorder(PdfPCell.NO_BORDER);
+
+        PdfPCell emptyCell3 = new PdfPCell(new Paragraph(" "));
+        emptyCell3.setRowspan(2);
+
+        emptyCell3.setBorder(PdfPCell.NO_BORDER);
+
+        footer.addCell(emptyCell2);
+        footer.addCell(emptyCell3);
+        footer.addCell(signatureCell);
+        footer.addCell(cashierCell);
+
+        PdfPCell footerCell = new PdfPCell(footer);
+        footerCell.setColspan(5);
+        footerCell.setBorder(PdfPCell.NO_BORDER);
+        table.addCell(footerCell);
 
         layoutDocument.add(table);
     }

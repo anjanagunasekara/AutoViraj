@@ -21,7 +21,8 @@ import java.util.logging.Logger;
  * @author Sehan Rathnayake
  */
 public class SaveInvoice {
-    public static void saveInvoice(Invoice invoice) {
+    
+     public static void saveInvoice(Invoice invoice) {
         /*test data */
       
         InvoiceDao.saveInvoice(invoice);
@@ -72,7 +73,7 @@ public class SaveInvoice {
         invoice.setSubtotal(121.00);
         invoice.setDiscount(10);
         invoice.setNetTotal(200);
-        invoice.setCurrentMeter(9999);
+        invoice.setCurrentMeter(0.0);
         invoice.setNextService(299999);
         
         try {
