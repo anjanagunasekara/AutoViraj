@@ -20,6 +20,7 @@ import java.util.ArrayList;
  * @author anjanag
  */
 public class VehicleDao {
+
     public static ArrayList<Vehicle> getAllVehicles() {
         try {
             Connection con = ConnectionFactory.getConnection();
@@ -42,15 +43,15 @@ public class VehicleDao {
         }
 
     }
-    
+
     public static Vehicle getVehicle(String regNo) {
         Vehicle v = null;
         try {
             Connection con = ConnectionFactory.getConnection();
             Statement stmt = con.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * from Vehicle v left outer join customer c on (v.CUSTOMER_ID = c.CUSTOMER_ID ) where v.REG_NO = '"+regNo+"'");
+            ResultSet rs = stmt.executeQuery("SELECT * from Vehicle v left outer join customer c on (v.CUSTOMER_ID = c.CUSTOMER_ID ) where v.REG_NO = '" + regNo + "'");
             ArrayList<Vehicle> vehicles = new ArrayList<Vehicle>();
-            if (rs.next()) {                
+            if (rs.next()) {
                 Customer c = new Customer();
                 c.setName(rs.getString("NAME"));
                 c.setCustomerId(rs.getInt("CUSTOMER_ID"));
@@ -67,9 +68,9 @@ public class VehicleDao {
         }
         return v;
     }
-    
-    public static boolean insertVehicle(Vehicle v){
-         try {
+
+    public static boolean insertVehicle(Vehicle v) {
+        try {
             Connection con = ConnectionFactory.getConnection();
             con.setAutoCommit(false);
             String insertCustomerSQL = "INSERT INTO CUSTOMER"
@@ -81,12 +82,12 @@ public class VehicleDao {
             stmt.setString(2, v.getCustomer().getAddress());
             stmt.setString(3, v.getCustomer().getTel());
             stmt.executeUpdate();
-            
+
             ResultSet rs = stmt.getGeneratedKeys();
             rs.next();
             int customerId = rs.getInt(1);
             stmt.close();
-            
+
             String insertInvoiceSQL = "INSERT INTO VEHICLE"
                     + "(REG_NO,CUSTOMER_ID,ODOMETER,TYPE,MODEL) VALUES"
                     + "(?,?,?,?,?)";
@@ -101,7 +102,7 @@ public class VehicleDao {
             System.out.println("before commit");
             stmt.executeUpdate();
             stmt.close();
-            
+
             try {
                 con.commit();
             } catch (SQLException ex) {
@@ -109,14 +110,14 @@ public class VehicleDao {
                 con.rollback();
                 return false;
             }
-         }catch(SQLException e){
-             e.printStackTrace();
-         }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         return true;
     }
-    
-     public static boolean insertCustomer(Customer c){
-         try {
+
+    public static boolean insertCustomer(Customer c) {
+        try {
             Connection con = ConnectionFactory.getConnection();
             con.setAutoCommit(false);
             String insertCustomerSQL = "INSERT INTO CUSTOMER"
@@ -129,7 +130,7 @@ public class VehicleDao {
             stmt.setString(3, c.getTel());
             stmt.executeUpdate();
             stmt.close();
-                      
+
             try {
                 con.commit();
             } catch (SQLException ex) {
@@ -137,12 +138,12 @@ public class VehicleDao {
                 con.rollback();
                 return false;
             }
-         }catch(SQLException e){
-             e.printStackTrace();
-         }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         return true;
     }
-     
+
     public static void main(String[] args) {
         Vehicle v = new Vehicle();
         v.setModel("Sedan");
@@ -157,5 +158,5 @@ public class VehicleDao {
         insertVehicle(v);
         System.out.println("");
     }
-    
+
 }

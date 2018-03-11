@@ -5,8 +5,10 @@
  */
 package autoviraj.gui;
 
+import java.awt.Toolkit;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
@@ -33,6 +35,7 @@ public class MainFrame extends javax.swing.JFrame {
                 }
             }
         });
+        setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/resources/icon.png")));
     }
 
     /**
@@ -50,12 +53,18 @@ public class MainFrame extends javax.swing.JFrame {
         jMenu2 = new javax.swing.JMenu();
         runMenu = new javax.swing.JMenu();
         invoiceMenu = new javax.swing.JMenuItem();
-        historyMenu = new javax.swing.JCheckBoxMenuItem();
+        historyMenuItem = new javax.swing.JMenuItem();
+        viewMenuItme = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new javax.swing.BoxLayout(getContentPane(), javax.swing.BoxLayout.LINE_AXIS));
 
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/papers.co-ad74-bmw-car-black-light-23-wallpaper.jpg"))); // NOI18N
+        jLabel1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel1MouseClicked(evt);
+            }
+        });
         getContentPane().add(jLabel1);
 
         jMenu1.setText("File");
@@ -75,14 +84,23 @@ public class MainFrame extends javax.swing.JFrame {
         });
         runMenu.add(invoiceMenu);
 
-        historyMenu.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_H, java.awt.event.InputEvent.CTRL_MASK));
-        historyMenu.setText("Vehicle History");
-        historyMenu.addActionListener(new java.awt.event.ActionListener() {
+        historyMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_H, java.awt.event.InputEvent.CTRL_MASK));
+        historyMenuItem.setText("View History");
+        historyMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                historyMenuActionPerformed(evt);
+                historyMenuItemActionPerformed(evt);
             }
         });
-        runMenu.add(historyMenu);
+        runMenu.add(historyMenuItem);
+
+        viewMenuItme.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_V, java.awt.event.InputEvent.CTRL_MASK));
+        viewMenuItme.setText("View Inventory");
+        viewMenuItme.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                viewMenuItmeActionPerformed(evt);
+            }
+        });
+        runMenu.add(viewMenuItme);
 
         jMenuBar1.add(runMenu);
 
@@ -92,16 +110,73 @@ public class MainFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void invoiceMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_invoiceMenuActionPerformed
-         InvoiceFrame ifr = new InvoiceFrame();
+
+        if (ifr != null) {
+            String ObjButtons[] = {"Yes", "No"};
+            int PromptResult = JOptionPane.showOptionDialog(null, "Are you sure you want to create new invoice?", "Burner", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, ObjButtons, ObjButtons[1]);
+            if (PromptResult == JOptionPane.YES_OPTION) {
+                ifr.dispose();
+                ifr = new InvoiceFrame();
                 ifr.setVisible(true);
                 ifr.setLocationRelativeTo(null);
+            } else {
+                vfr.toFront();
+                hfr.toFront();
+                ifr.toFront();
+            }
+
+        } else {
+            ifr = new InvoiceFrame();
+            ifr.setVisible(true);
+            ifr.setLocationRelativeTo(null);
+        }
+        if(vfr != null)
+            vfr.toFront();
+        if(hfr!=null)
+            hfr.toFront();
+        ifr.toFront();
     }//GEN-LAST:event_invoiceMenuActionPerformed
 
-    private void historyMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_historyMenuActionPerformed
-         HistoryForm ifr = new HistoryForm();
-                ifr.setVisible(true);
-                ifr.setLocationRelativeTo(null);
-    }//GEN-LAST:event_historyMenuActionPerformed
+    private void viewMenuItmeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_viewMenuItmeActionPerformed
+        if (vfr != null) {
+            vfr.dispose();
+        }
+        vfr = new ViewForm();
+        vfr.setVisible(true);
+        vfr.setLocationRelativeTo(null);
+        if(ifr!=null)
+            ifr.toFront();
+        if(hfr!=null)
+            hfr.toFront();
+        vfr.toFront();
+    }//GEN-LAST:event_viewMenuItmeActionPerformed
+
+    private void historyMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_historyMenuItemActionPerformed
+        if (hfr != null) {
+            hfr.dispose();
+        }
+        hfr = new HistoryForm();
+        hfr.setVisible(true);
+        hfr.setLocationRelativeTo(null);
+        if(vfr != null)
+            vfr.toFront();
+        if(ifr!=null)
+            ifr.toFront();
+        hfr.toFront();
+    }//GEN-LAST:event_historyMenuItemActionPerformed
+
+    private void jLabel1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel1MouseClicked
+        if(vfr != null)
+            vfr.toFront();
+        if(ifr!=null)
+            ifr.toFront();
+        if(hfr!=null)
+            hfr.toFront();
+    }//GEN-LAST:event_jLabel1MouseClicked
+
+    InvoiceFrame ifr;
+    HistoryForm hfr;
+    ViewForm vfr;
 
     /**
      * @param args the command line arguments
@@ -139,12 +214,13 @@ public class MainFrame extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JCheckBoxMenuItem historyMenu;
+    private javax.swing.JMenuItem historyMenuItem;
     private javax.swing.JMenuItem invoiceMenu;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenu runMenu;
+    private javax.swing.JMenuItem viewMenuItme;
     // End of variables declaration//GEN-END:variables
 }

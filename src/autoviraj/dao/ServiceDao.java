@@ -17,27 +17,27 @@ import java.util.ArrayList;
  * @author Sehan Rathnayake
  */
 public class ServiceDao {
-    public static ArrayList<Service> getAllServices(){
-       try {
+
+    public static ArrayList<Service> getAllServices() {
+        try {
             Connection con = ConnectionFactory.getConnection();
             Statement stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT * FROM SERVICE");
-            ArrayList<Service> services= new ArrayList<Service>();
-            if(rs.next())
-            {
+            ArrayList<Service> services = new ArrayList<Service>();
+            while (rs.next()) {
                 Service service = new Service();
                 service.setServiceId(rs.getString("SERVICE_ID"));
                 service.setName(rs.getString("NAME"));
-                service.setPrice(rs.getDouble("PRICE"));
+                service.setPrice(rs.getDouble("UNIT_PRICE"));
                 service.setUnitName(rs.getString("UNIT_NAME"));
                 services.add(service);
             }
             return services;
-            
-         } catch (SQLException ex) {
-           System.err.println("ex");
-           return null;
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            return null;
         }
 
-       }
+    }
 }

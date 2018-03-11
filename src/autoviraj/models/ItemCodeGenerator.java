@@ -5,6 +5,7 @@
  */
 package autoviraj.models;
 
+import autoviraj.gui.InputOutputForm;
 import autoviraj.services.ItemMapper;
 import autoviraj.services.ServiceMapper;
 import java.io.BufferedReader;
@@ -15,6 +16,7 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -32,9 +34,13 @@ public class ItemCodeGenerator {
     }
 
     public void createItemMap () throws IOException{
-        InputStream is = getClass().getResourceAsStream("/resources/codes_item.csv");
+        FileReader fr = new FileReader(InputOutputForm.inputFilePath+"\\codes_item.csv");
+        if(!fr.ready()){
+            JOptionPane.showMessageDialog(null, "Cannot find item code list!", "Error", JOptionPane.ERROR_MESSAGE);
+        }
         ItemMapper mapper = new ItemMapper();
-        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(is));
+        System.out.println(InputOutputForm.inputFilePath+"\\codes_item.csv");
+        BufferedReader bufferedReader = new BufferedReader(fr);
         String line;
         while((line = bufferedReader.readLine()) != null) {            
             String split[] = line.split(",");
@@ -46,9 +52,12 @@ public class ItemCodeGenerator {
     }
     
     public void createServiceMap () throws IOException{
-        InputStream is = getClass().getResourceAsStream("/resources/codes_service.csv");
+        FileReader fr = new FileReader(InputOutputForm.inputFilePath+"\\codes_service.csv");
+        if(!fr.ready()){
+            JOptionPane.showMessageDialog(null, "Cannot find service code list!", "Error", JOptionPane.ERROR_MESSAGE);
+        }
         ServiceMapper mapper = new ServiceMapper();
-        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(is));
+        BufferedReader bufferedReader = new BufferedReader(fr);
         String line;
         while((line = bufferedReader.readLine()) != null) {            
             String split[] = line.split(",");

@@ -17,7 +17,9 @@ public class AutoViraj {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        new MainFrame().setVisible(true);// TODO code application logic here
+        MainFrame mf = new MainFrame();
+        mf.setVisible(true);
+        //mf.setAlwaysOnTop(true);// TODO code application logic here
     }
-    
+
 }

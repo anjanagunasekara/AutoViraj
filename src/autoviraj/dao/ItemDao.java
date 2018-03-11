@@ -25,7 +25,7 @@ public class ItemDao {
             Statement stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT * FROM ITEM");
             ArrayList<Item> items = new ArrayList<Item>();
-            if (rs.next()) {
+            while (rs.next()) {
                 Item item = new Item();
                 item.setItemId(rs.getString("ITEM_ID"));
                 item.setName(rs.getString("NAME"));

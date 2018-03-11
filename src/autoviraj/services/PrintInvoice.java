@@ -9,6 +9,7 @@ package autoviraj.services;
  *
  * @author Sehan Rathnayake
  */
+import autoviraj.gui.InputOutputForm;
 import autoviraj.models.Invoice;
 import autoviraj.models.InvoiceItem;
 import autoviraj.models.InvoiceService;
@@ -36,7 +37,7 @@ public class PrintInvoice {
     public static void printInvoice(Invoice invoice) throws Exception {
 
         Document layoutDocument = new Document();
-        String path = invoice.getInvoiceId()+".pdf";
+        String path = InputOutputForm.invoiceFilePath+"//"+invoice.getInvoiceId()+".pdf";
         PdfWriter docWriter = PdfWriter.getInstance(layoutDocument, new FileOutputStream(path));
         layoutDocument.open();
 

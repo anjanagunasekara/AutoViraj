@@ -16,6 +16,7 @@ import autoviraj.models.ItemCodeGenerator;
 import autoviraj.models.Service;
 import autoviraj.models.Vehicle;
 import autoviraj.services.PrintInvoice;
+import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -79,7 +80,10 @@ public class InvoiceFrame extends javax.swing.JFrame {
                     InvoiceFrame.this.dispose();
                 }
             }
-        });
+        });        
+        prviewBtn.setEnabled(false);
+                setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/resources/icon.png")));
+
     }
 
     /**
@@ -168,18 +172,45 @@ public class InvoiceFrame extends javax.swing.JFrame {
 
         jLabel4.setText(" Vehicle Type : ");
 
+        vehicleTypeTxt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                vehicleTypeTxtActionPerformed(evt);
+            }
+        });
+
         jLabel2.setText("Service Type     :");
+
+        serviceTypeTxt.setEnabled(false);
 
         jLabel3.setText("Job No : ");
 
+        customerCodeTxt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                customerCodeTxtActionPerformed(evt);
+            }
+        });
+
         jLabel5.setText(" Customer Code : ");
+
+        customerNameTxt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                customerNameTxtActionPerformed(evt);
+            }
+        });
 
         jLabel6.setText(" Customer Name : ");
 
         newCustBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/new customer.png"))); // NOI18N
         newCustBtn.setText("New Customer");
+        newCustBtn.setEnabled(false);
 
         jLabel7.setText(" Telephone No :");
+
+        customerTelTxt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                customerTelTxtActionPerformed(evt);
+            }
+        });
 
         itemTabel.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -235,6 +266,7 @@ public class InvoiceFrame extends javax.swing.JFrame {
 
         saveBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/save.png"))); // NOI18N
         saveBtn.setText("Save");
+        saveBtn.setEnabled(false);
         saveBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 saveBtnActionPerformed(evt);
@@ -243,6 +275,7 @@ public class InvoiceFrame extends javax.swing.JFrame {
 
         delBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/delete.png"))); // NOI18N
         delBtn.setText("Delete");
+        delBtn.setEnabled(false);
 
         jLabel8.setText("Service Total  :");
 
@@ -770,12 +803,11 @@ public class InvoiceFrame extends javax.swing.JFrame {
             controller.getDocumentViewController().setAnnotationCallback(new org.icepdf.ri.common.MyAnnotationCallback(controller.getDocumentViewController()));
             JFrame applicationFrame = new JFrame();//applicationFrame.getContentPane().add(viewerComponentPanel);
             applicationFrame.add(viewerComponentPanel);
-            File file = new File(i.getInvoiceId() + ".pdf");
+            File file = new File(InputOutputForm.invoiceFilePath+"//"+i.getInvoiceId() + ".pdf");
             while (!file.exists()) {
-                 file = new File(i.getInvoiceId() + ".pdf");
+                 file = new File(InputOutputForm.invoiceFilePath+"//"+i.getInvoiceId() + ".pdf");
             }
-            URL f = getClass().getResource("/resources/" + i.getInvoiceId() + ".pdf");
-            controller.openDocument(i.getInvoiceId() + ".pdf");
+            controller.openDocument(InputOutputForm.invoiceFilePath+"//"+i.getInvoiceId() + ".pdf");
             applicationFrame.pack();
             applicationFrame.setVisible(true);
             applicationFrame.setLocationRelativeTo(null);
@@ -790,6 +822,7 @@ public class InvoiceFrame extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Error occured!", "Error", JOptionPane.ERROR_MESSAGE);
         }
         addBtn.setEnabled(false);
+        prviewBtn.setEnabled(true);
     }//GEN-LAST:event_addBtnActionPerformed
 
     private void odometerTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_odometerTxtActionPerformed
@@ -811,6 +844,7 @@ public class InvoiceFrame extends javax.swing.JFrame {
     private void resetBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetBtnActionPerformed
         int option = JOptionPane.showConfirmDialog(null, "Are you sure you want to reset fields?", "", JOptionPane.YES_NO_CANCEL_OPTION);
         addBtn.setEnabled(true);
+        prviewBtn.setEnabled(false);
         if (option == JOptionPane.YES_OPTION) {
             this.dispose();
             InvoiceFrame ifr = new InvoiceFrame();
@@ -820,14 +854,13 @@ public class InvoiceFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_resetBtnActionPerformed
 
     private void prviewBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_prviewBtnActionPerformed
-        URL f = getClass().getResource("/resources/invoice.pdf");
         SwingController controller = new SwingController();
         SwingViewBuilder factory = new SwingViewBuilder(controller);
         JPanel viewerComponentPanel = factory.buildViewerPanel();
         controller.getDocumentViewController().setAnnotationCallback(new org.icepdf.ri.common.MyAnnotationCallback(controller.getDocumentViewController()));
         JFrame applicationFrame = new JFrame();//applicationFrame.getContentPane().add(viewerComponentPanel);
         applicationFrame.add(viewerComponentPanel);
-        controller.openDocument(f);
+        controller.openDocument(InputOutputForm.invoiceFilePath+"//"+invoiceNoTxt.getText() + ".pdf");
         applicationFrame.pack();
         applicationFrame.setVisible(true);
         applicationFrame.setLocationRelativeTo(null);
@@ -849,8 +882,25 @@ public class InvoiceFrame extends javax.swing.JFrame {
             customerNameTxt.setText(v.getCustomer().getName());
             isVehicleExist = true;
         }
+        vehicleTypeTxt.requestFocus();
 
     }//GEN-LAST:event_vehicleNoTxtActionPerformed
+
+    private void customerCodeTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_customerCodeTxtActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_customerCodeTxtActionPerformed
+
+    private void vehicleTypeTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_vehicleTypeTxtActionPerformed
+        customerNameTxt.requestFocus();
+    }//GEN-LAST:event_vehicleTypeTxtActionPerformed
+
+    private void customerNameTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_customerNameTxtActionPerformed
+        customerTelTxt.requestFocus();        // TODO add your handling code here:
+    }//GEN-LAST:event_customerNameTxtActionPerformed
+
+    private void customerTelTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_customerTelTxtActionPerformed
+        itemTabel.requestFocus();
+    }//GEN-LAST:event_customerTelTxtActionPerformed
 
     /**
      * @param args the command line arguments
