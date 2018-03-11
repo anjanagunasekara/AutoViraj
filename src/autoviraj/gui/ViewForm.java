@@ -9,10 +9,12 @@ import autoviraj.dao.ItemDao;
 import autoviraj.dao.ServiceDao;
 import autoviraj.models.Invoice;
 import autoviraj.models.Item;
+import autoviraj.models.ItemCodeGenerator;
 import autoviraj.models.Service;
 import java.awt.Toolkit;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JFrame;
 import javax.swing.table.DefaultTableModel;
@@ -43,8 +45,10 @@ public class ViewForm extends javax.swing.JFrame {
     }
 
     void setAllServices() {
-        List<Service> sList = ServiceDao.getAllServices();
-        DefaultTableModel defaultTableModel = (DefaultTableModel) serviceTable.getModel();
+        List<Service> sList = new ArrayList<>();
+        for(Service i :new ItemCodeGenerator().getServiceMap().values()){
+            sList.add(i);
+        }DefaultTableModel defaultTableModel = (DefaultTableModel) serviceTable.getModel();
         int rowCount = defaultTableModel.getRowCount();
         for (int i = 0; i < rowCount; i++) {
             defaultTableModel.removeRow(0);
@@ -55,7 +59,10 @@ public class ViewForm extends javax.swing.JFrame {
     }
     
     void setAllItems() {
-        List<Item> sList = ItemDao.getAllItems();
+        List<Item> sList = new ArrayList<>();
+        for(Item i :new ItemCodeGenerator().getItemMap().values()){
+            sList.add(i);
+        }
         DefaultTableModel defaultTableModel = (DefaultTableModel) itemTabel.getModel();
         int rowCount = defaultTableModel.getRowCount();
         for (int i = 0; i < rowCount; i++) {

@@ -32,7 +32,7 @@ public class SaveInvoice {
         Customer customer=new Customer();
         customer.setCustomerId(1);
         customer.setName("Sehan Rathnayake");
-        customer.setAddress("yemen road,Yemen");
+      //  customer.setAddress("yemen road,Yemen.");
         
         Vehicle vehicle = new Vehicle();
         vehicle.setVehicleId(1);

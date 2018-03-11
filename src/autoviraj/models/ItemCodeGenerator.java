@@ -45,6 +45,7 @@ public class ItemCodeGenerator {
         while((line = bufferedReader.readLine()) != null) {            
             String split[] = line.split(",");
             Item item = new Item(split[0], split[1], Double.parseDouble(split[2]),"Nos");
+            System.out.println(item.getItemId());
             itemMap.put(split[0],item);
             mapper.createNewItem(item);
         }
