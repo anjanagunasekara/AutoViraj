@@ -80,9 +80,9 @@ public class InvoiceFrame extends javax.swing.JFrame {
                     InvoiceFrame.this.dispose();
                 }
             }
-        });        
+        });
         prviewBtn.setEnabled(false);
-                setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/resources/icon.png")));
+        setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/resources/icon.png")));
 
     }
 
@@ -737,8 +737,7 @@ public class InvoiceFrame extends javax.swing.JFrame {
         Vehicle v = new Vehicle();
         v.setRegNo(vehicleNoTxt.getText());
         v.setOdometer("".equals(odometerTxt.getText()) ? "-" : odometerTxt.getText());
-        v.setModel(vehicleTypeTxt.getText());
-        v.setType("No-Type");
+        v.setType(vehicleTypeTxt.getText());
 
         ArrayList<InvoiceItem> itemList = new ArrayList<>();
         ArrayList<InvoiceService> serviceList = new ArrayList<>();
@@ -770,14 +769,26 @@ public class InvoiceFrame extends javax.swing.JFrame {
         Invoice i = new Invoice();
         i.setInvoiceItems(itemList);
         i.setInvoiceServices(serviceList);
-        i.setSubtotal(grandTotal + itemTotal*itemDiscount + serviceTotal*serviceDiscountA);
-        i.setDiscount(itemTotal*itemDiscount + serviceTotal*serviceDiscountA);
+        i.setSubtotal(grandTotal + itemTotal * itemDiscount + serviceTotal * serviceDiscountA);
+        i.setDiscount(itemTotal * itemDiscount + serviceTotal * serviceDiscountA);
         i.setNetTotal(grandTotal);
         i.setDate(datePicker.getDate());
 
         i.setCustomer(c);
         i.setVehicle(v);
         i.setInvoiceId(Integer.parseInt(invoiceNoTxt.getText()));
+        try {
+            double odometer = Double.parseDouble(odometerTxt.getText());
+            i.setCurrentMeter(odometer);
+        } catch (Exception e) {
+            i.setCurrentMeter(0);
+        }
+        try {
+            double nextservice = Double.parseDouble(nextServiceTxt.getText());
+            i.setNextService(nextservice);
+        } catch (Exception e) {
+            i.setNextService(0);
+        }
         try {
             PrintInvoice.printInvoice(i);
         } catch (Exception e) {
@@ -803,11 +814,11 @@ public class InvoiceFrame extends javax.swing.JFrame {
             controller.getDocumentViewController().setAnnotationCallback(new org.icepdf.ri.common.MyAnnotationCallback(controller.getDocumentViewController()));
             JFrame applicationFrame = new JFrame();//applicationFrame.getContentPane().add(viewerComponentPanel);
             applicationFrame.add(viewerComponentPanel);
-            File file = new File(InputOutputForm.invoiceFilePath+"//"+i.getInvoiceId() + ".pdf");
+            File file = new File(InputOutputForm.invoiceFilePath + "//" + i.getInvoiceId() + ".pdf");
             while (!file.exists()) {
-                 file = new File(InputOutputForm.invoiceFilePath+"//"+i.getInvoiceId() + ".pdf");
+                file = new File(InputOutputForm.invoiceFilePath + "//" + i.getInvoiceId() + ".pdf");
             }
-            controller.openDocument(InputOutputForm.invoiceFilePath+"//"+i.getInvoiceId() + ".pdf");
+            controller.openDocument(InputOutputForm.invoiceFilePath + "//" + i.getInvoiceId() + ".pdf");
             applicationFrame.pack();
             applicationFrame.setVisible(true);
             applicationFrame.setLocationRelativeTo(null);
@@ -860,7 +871,7 @@ public class InvoiceFrame extends javax.swing.JFrame {
         controller.getDocumentViewController().setAnnotationCallback(new org.icepdf.ri.common.MyAnnotationCallback(controller.getDocumentViewController()));
         JFrame applicationFrame = new JFrame();//applicationFrame.getContentPane().add(viewerComponentPanel);
         applicationFrame.add(viewerComponentPanel);
-        controller.openDocument(InputOutputForm.invoiceFilePath+"//"+invoiceNoTxt.getText() + ".pdf");
+        controller.openDocument(InputOutputForm.invoiceFilePath + "//" + invoiceNoTxt.getText() + ".pdf");
         applicationFrame.pack();
         applicationFrame.setVisible(true);
         applicationFrame.setLocationRelativeTo(null);

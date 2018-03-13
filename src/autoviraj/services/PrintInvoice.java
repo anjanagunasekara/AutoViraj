@@ -24,7 +24,9 @@ import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPCellEvent;
 import com.itextpdf.text.Font;
 import com.itextpdf.text.Rectangle;
+import com.itextpdf.text.pdf.BaseFont;
 import java.io.IOException;
+import java.net.URI;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -34,7 +36,8 @@ public class PrintInvoice {
      * @param args the command line arguments
      */
     private static BaseColor themeColor = BaseColor.RED;
-
+       private static BaseFont basefont;
+    
     public static void printInvoice(Invoice invoice) throws Exception {
 
         Document layoutDocument = new Document();
@@ -42,8 +45,10 @@ public class PrintInvoice {
         PdfWriter docWriter = PdfWriter.getInstance(layoutDocument, new FileOutputStream(path));
         layoutDocument.setMargins(0, 0, 15, 5);
         layoutDocument.open();
-
-        addTitle(layoutDocument);
+        URI uri = new URI(PrintInvoice.class.getResource("/resources/Lato-Bold.ttf").getFile().toString());
+        basefont = BaseFont.createFont(uri.getPath(), BaseFont.WINANSI,BaseFont.EMBEDDED);
+       
+        addTitle(layoutDocument,invoice.getInvoiceId());
 
         addTable(layoutDocument, invoice);
 
@@ -51,15 +56,15 @@ public class PrintInvoice {
 
     }
 
-    public static void addTitle(Document layoutDocument) throws DocumentException {
+    public static void addTitle(Document layoutDocument,int invoiceId) throws DocumentException {
         try {
 
-            Image img = Image.getInstance("src/resources/Berner_logo.jpg");
+            Image img = Image.getInstance(PrintInvoice.class.getResource("/resources/Berner_logo.jpg"));
             img.scaleToFit(180, 180);
             img.setAlignment(Image.MIDDLE);
             layoutDocument.add(img);
 
-            Font boldFont = new Font(Font.FontFamily.HELVETICA, 18, Font.BOLD);
+            Font boldFont = new Font(basefont, 18, Font.BOLD);
             Paragraph title = new Paragraph("SERVICE INVOICE", boldFont);
             PdfPCell titleCell = new PdfPCell(title);
             titleCell.setBorder(PdfPCell.NO_BORDER);
@@ -71,11 +76,11 @@ public class PrintInvoice {
             emptycell.setRowspan(2);
 
             PdfPTable header = new PdfPTable(new float[]{55, 60, 55});
-            Font addressFont = new Font(Font.FontFamily.HELVETICA, 11);
-            Font teleFont = new Font(Font.FontFamily.HELVETICA, 9);
+            Font addressFont = new Font(basefont, 11);
+            Font teleFont = new Font(basefont, 9);
             
             Phrase address1 = new Phrase();
-            address1.add(new Chunk("BERNER Head Office\n", new Font(Font.FontFamily.HELVETICA, 12, Font.BOLD)));
+            address1.add(new Chunk("BERNER Head Office\n", new Font(basefont, 12, Font.BOLD)));
             address1.add(new Chunk("Ignite Enterprises,\nNelumkanuwa,\nKatupotha,\nKurunegala.", addressFont));
 
             PdfPCell address1Cell = new PdfPCell(address1);
@@ -84,7 +89,7 @@ public class PrintInvoice {
             address1Cell.setBorder(PdfPCell.NO_BORDER);
 
             Phrase address2 = new Phrase();
-            address2.add(new Chunk("BERNER Automobile\nPromotion Team\n", new Font(Font.FontFamily.HELVETICA, 12, Font.BOLD)));
+            address2.add(new Chunk("BERNER Automobile\nPromotion Team\n", new Font(basefont, 12, Font.BOLD)));
             address2.add(new Chunk("187/B Thalalla east,\nKekanadura,\nMatara.", addressFont));
 
             PdfPCell address2Cell = new PdfPCell(address2);
@@ -127,14 +132,14 @@ public class PrintInvoice {
              
             invoiceNoTable.addCell(emptycell3);
 
-            Font invoiceNoHeadingFont = new Font(Font.FontFamily.HELVETICA, 14, Font.BOLD);
+            Font invoiceNoHeadingFont = new Font(basefont, 14, Font.BOLD);
             Paragraph invoiceNoHeading = new Paragraph("Invoice No : ", invoiceNoHeadingFont);
             PdfPCell invoiceNoHeadingCell = new PdfPCell(invoiceNoHeading);
             invoiceNoHeadingCell.setBorder(PdfPCell.NO_BORDER);
 
-            Font invoiceNoValueFont = new Font(Font.FontFamily.HELVETICA, 14, Font.BOLD);
+            Font invoiceNoValueFont = new Font(basefont, 14, Font.BOLD);
             invoiceNoValueFont.setColor(themeColor);
-            Paragraph invoiceNoValue = new Paragraph("0001", invoiceNoValueFont);
+            Paragraph invoiceNoValue = new Paragraph(String.format("%05d", invoiceId), invoiceNoValueFont);
             PdfPCell invoiceNoValueCell = new PdfPCell(invoiceNoValue);
             invoiceNoValueCell.setBorder(PdfPCell.NO_BORDER);
 
@@ -152,7 +157,7 @@ public class PrintInvoice {
 
     public static void addTable(Document layoutDocument, Invoice invoice) throws DocumentException {
 
-        Font headingFont = new Font(Font.FontFamily.HELVETICA, 12);
+        Font headingFont = new Font(basefont, 12);
         Font valueFont = new Font(Font.FontFamily.COURIER, 12);
 
         PdfPTable table = new PdfPTable(new float[]{50, 230, 70, 70, 80});
@@ -380,7 +385,7 @@ public class PrintInvoice {
 
         table.addCell(meterReadingsCell);
 
-        Font totalFont = new Font(Font.FontFamily.HELVETICA, 12, Font.BOLD);
+        Font totalFont = new Font(basefont, 12, Font.BOLD);
 
         Paragraph subTotal = new Paragraph(" Sub Total", headingFont);
         PdfPCell subTotalCell = new PdfPCell(subTotal);
@@ -450,6 +455,7 @@ public class PrintInvoice {
 
         emptyCell3.setBorder(PdfPCell.NO_BORDER);
 
+        footer.addCell(emptyCell2);
         footer.addCell(emptyCell2);
         footer.addCell(emptyCell3);
         footer.addCell(signatureCell);

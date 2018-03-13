@@ -75,6 +75,7 @@ public class SaveInvoice {
         invoice.setNetTotal(200);
         invoice.setCurrentMeter(0.0);
         invoice.setNextService(299999);
+        invoice.setInvoiceId(33333);
         
         try {
             PrintInvoice.printInvoice(invoice);
