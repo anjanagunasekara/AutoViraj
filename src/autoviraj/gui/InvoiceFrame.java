@@ -747,8 +747,12 @@ public class InvoiceFrame extends javax.swing.JFrame {
                 InvoiceItem invoiceItem = new InvoiceItem();
                 invoiceItem.setItemId(itemTabel.getModel().getValueAt(i, 0) + "");
                 invoiceItem.setName(itemTabel.getModel().getValueAt(i, 1) + "");
-                invoiceItem.setUnitPrice(Double.parseDouble(itemTabel.getModel().getValueAt(i, 2).toString()));
-                invoiceItem.setUnits(Double.parseDouble(itemTabel.getModel().getValueAt(i, 3).toString()));
+                try {
+                    invoiceItem.setUnitPrice(Double.parseDouble(itemTabel.getModel().getValueAt(i, 2).toString()));
+                    invoiceItem.setUnits(Double.parseDouble(itemTabel.getModel().getValueAt(i, 3).toString()));
+                } catch (Exception e) {
+                    JOptionPane.showMessageDialog(null, "Please enter valid price or quantity!", "Error", JOptionPane.ERROR_MESSAGE);
+                }
                 invoiceItem.setUnitName(" Nos");
                 itemList.add(invoiceItem);
             }
@@ -759,8 +763,12 @@ public class InvoiceFrame extends javax.swing.JFrame {
                 InvoiceService invoiceService = new InvoiceService();
                 invoiceService.setServiceId(serviceTabel.getModel().getValueAt(i, 0) + "");
                 invoiceService.setName(serviceTabel.getModel().getValueAt(i, 1) + "");
-                invoiceService.setUnitPrice(Double.parseDouble(serviceTabel.getModel().getValueAt(i, 2).toString()));
-                invoiceService.setUnits(Double.parseDouble(serviceTabel.getModel().getValueAt(i, 3).toString()));
+                try {
+                    invoiceService.setUnitPrice(Double.parseDouble(serviceTabel.getModel().getValueAt(i, 2).toString()));
+                    invoiceService.setUnits(Double.parseDouble(serviceTabel.getModel().getValueAt(i, 3).toString()));
+                } catch (Exception e) {
+                    JOptionPane.showMessageDialog(null, "Please enter valid price or quantity!", "Error", JOptionPane.ERROR_MESSAGE);
+                }
                 invoiceService.setUnitName(" Nos");
                 serviceList.add(invoiceService);
             }

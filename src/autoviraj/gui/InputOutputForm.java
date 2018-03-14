@@ -22,6 +22,7 @@ public class InputOutputForm extends javax.swing.JFrame {
      */
     public InputOutputForm() {
         initComponents();
+        
     }
 
     /**

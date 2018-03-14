@@ -14,8 +14,11 @@ import autoviraj.models.Service;
 import java.awt.Toolkit;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.table.DefaultTableModel;
 
@@ -29,26 +32,32 @@ public class ViewForm extends javax.swing.JFrame {
      * Creates new form ViewForm
      */
     public ViewForm() {
-        initComponents();
-        setAllItems();
-        setAllServices();
-        this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-        addWindowListener(new WindowAdapter() {
-            @Override
-            public void windowClosing(WindowEvent we) {
+        try {
+            initComponents();
+            setAllItems();
+            setAllServices();
+            new ItemCodeGenerator().createItemMap();
+            new ItemCodeGenerator().createServiceMap();
+            this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+            addWindowListener(new WindowAdapter() {
+                @Override
+                public void windowClosing(WindowEvent we) {
                     ViewForm.this.dispose();
-            }
-        });
-                setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/resources/icon.png")));
-
+                }
+            });
+            setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/resources/icon.png")));
+        } catch (IOException ex) {
+            Logger.getLogger(ViewForm.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
     }
 
     void setAllServices() {
         List<Service> sList = new ArrayList<>();
-        for(Service i :new ItemCodeGenerator().getServiceMap().values()){
+        for (Service i : new ItemCodeGenerator().getServiceMap().values()) {
             sList.add(i);
-        }DefaultTableModel defaultTableModel = (DefaultTableModel) serviceTable.getModel();
+        }
+        DefaultTableModel defaultTableModel = (DefaultTableModel) serviceTable.getModel();
         int rowCount = defaultTableModel.getRowCount();
         for (int i = 0; i < rowCount; i++) {
             defaultTableModel.removeRow(0);
@@ -57,10 +66,10 @@ public class ViewForm extends javax.swing.JFrame {
             defaultTableModel.addRow(new Object[]{i.getServiceId(), i.getName(), i.getPrice(), i.getUnitName()});
         }
     }
-    
+
     void setAllItems() {
         List<Item> sList = new ArrayList<>();
-        for(Item i :new ItemCodeGenerator().getItemMap().values()){
+        for (Item i : new ItemCodeGenerator().getItemMap().values()) {
             sList.add(i);
         }
         DefaultTableModel defaultTableModel = (DefaultTableModel) itemTabel.getModel();
