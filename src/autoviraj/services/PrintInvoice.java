@@ -45,8 +45,7 @@ public class PrintInvoice {
         PdfWriter docWriter = PdfWriter.getInstance(layoutDocument, new FileOutputStream(path));
         layoutDocument.setMargins(0, 0, 15, 5);
         layoutDocument.open();
-        URI uri = new URI(PrintInvoice.class.getResource("/resources/Lato-Bold.ttf").getFile().toString());
-        basefont = BaseFont.createFont(uri.getPath(), BaseFont.WINANSI,BaseFont.EMBEDDED);
+        basefont = BaseFont.createFont(InputOutputForm.binPath + "//Lato-Bold.ttf", BaseFont.WINANSI,BaseFont.EMBEDDED,true);
        
         addTitle(layoutDocument,invoice.getInvoiceId());
 
@@ -101,7 +100,7 @@ public class PrintInvoice {
             telephone1Cell.setHorizontalAlignment(Element.ALIGN_LEFT);
             telephone1Cell.setBorder(PdfPCell.NO_BORDER);
 
-            Paragraph telephone2 = new Paragraph("Tel : +9412258244\nMob : +94719969039\nE-mail : bernerautomobile.gmail.com", teleFont);
+            Paragraph telephone2 = new Paragraph("Tel : +9412258244\nMob : +94719969039\nE-mail: bernerautomobile@gmail.com", teleFont);
             PdfPCell telephone2Cell = new PdfPCell(telephone2);
             telephone2Cell.setHorizontalAlignment(Element.ALIGN_LEFT);
 
@@ -350,19 +349,19 @@ public class PrintInvoice {
 
         PdfPTable meterReadings = new PdfPTable(new float[]{50, 5, 60});
 
-        Paragraph currentMeterHeading = new Paragraph("  Current Meter Reading", headingFont);
+        Paragraph currentMeterHeading = new Paragraph("  Current Meter (km)", headingFont);
         PdfPCell currentMeterHeadingCell = new PdfPCell(currentMeterHeading);
         currentMeterHeadingCell.setBorder(PdfPCell.NO_BORDER);
 
-        Paragraph currentMeterValue = new Paragraph(PdfUtils.formatMeterReading(invoice.getCurrentMeter()), valueFont);
+        Paragraph currentMeterValue = new Paragraph(PdfUtils.formatMeterReading((int)invoice.getCurrentMeter()), valueFont);
         PdfPCell currentMeterValueCell = new PdfPCell(currentMeterValue);
         currentMeterValueCell.setBorder(PdfPCell.NO_BORDER);
-
-        Paragraph nextServiceHeading = new Paragraph("  Next Service Due", headingFont);
+        
+        Paragraph nextServiceHeading = new Paragraph("  Next Service Due (km)", headingFont);
         PdfPCell nextServiceHeadingCell = new PdfPCell(nextServiceHeading);
         nextServiceHeadingCell.setBorder(PdfPCell.NO_BORDER);
 
-        Paragraph nextServiceValue = new Paragraph(PdfUtils.formatMeterReading(invoice.getNextService()), valueFont);
+        Paragraph nextServiceValue = new Paragraph(PdfUtils.formatMeterReading((int)invoice.getNextService()), valueFont);
         PdfPCell nextServiceValueCell = new PdfPCell(nextServiceValue);
         nextServiceValueCell.setBorder(PdfPCell.NO_BORDER);
 
@@ -385,7 +384,7 @@ public class PrintInvoice {
 
         table.addCell(meterReadingsCell);
 
-        Font totalFont = new Font(basefont, 12, Font.BOLD);
+        Font totalFont = new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.BOLD);
 
         Paragraph subTotal = new Paragraph(" Sub Total", headingFont);
         PdfPCell subTotalCell = new PdfPCell(subTotal);

@@ -31,7 +31,7 @@ public class PdfUtils {
         return dateStr;
     }
     
-    public static String formatMeterReading (double reading) {
+    public static String formatMeterReading (int reading) {
         if(reading == 0)return "";
         else return String.valueOf(reading);        
     }

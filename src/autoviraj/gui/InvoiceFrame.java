@@ -229,6 +229,11 @@ public class InvoiceFrame extends javax.swing.JFrame {
             }
         });
         itemTabel.setColumnSelectionAllowed(true);
+        itemTabel.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                itemTabelFocusLost(evt);
+            }
+        });
         itemTabel.addInputMethodListener(new java.awt.event.InputMethodListener() {
             public void caretPositionChanged(java.awt.event.InputMethodEvent evt) {
             }
@@ -236,9 +241,19 @@ public class InvoiceFrame extends javax.swing.JFrame {
                 itemTabelInputMethodTextChanged(evt);
             }
         });
+        itemTabel.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                itemTabelPropertyChange(evt);
+            }
+        });
         itemTabel.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 itemTabelKeyReleased(evt);
+            }
+        });
+        itemTabel.addVetoableChangeListener(new java.beans.VetoableChangeListener() {
+            public void vetoableChange(java.beans.PropertyChangeEvent evt)throws java.beans.PropertyVetoException {
+                itemTabelVetoableChange(evt);
             }
         });
         jScrollPane1.setViewportView(itemTabel);
@@ -822,11 +837,11 @@ public class InvoiceFrame extends javax.swing.JFrame {
             controller.getDocumentViewController().setAnnotationCallback(new org.icepdf.ri.common.MyAnnotationCallback(controller.getDocumentViewController()));
             JFrame applicationFrame = new JFrame();//applicationFrame.getContentPane().add(viewerComponentPanel);
             applicationFrame.add(viewerComponentPanel);
-            File file = new File(InputOutputForm.invoiceFilePath + "//" + i.getInvoiceId() + ".pdf");
+            File file = new File(InputOutputForm.invoiceFilePath + "\\" + i.getInvoiceId() + ".pdf");
             while (!file.exists()) {
-                file = new File(InputOutputForm.invoiceFilePath + "//" + i.getInvoiceId() + ".pdf");
+                file = new File(InputOutputForm.invoiceFilePath + "\\" + i.getInvoiceId() + ".pdf");
             }
-            controller.openDocument(InputOutputForm.invoiceFilePath + "//" + i.getInvoiceId() + ".pdf");
+            controller.openDocument(InputOutputForm.invoiceFilePath + "\\" + i.getInvoiceId() + ".pdf");
             applicationFrame.pack();
             applicationFrame.setVisible(true);
             applicationFrame.setLocationRelativeTo(null);
@@ -920,6 +935,18 @@ public class InvoiceFrame extends javax.swing.JFrame {
     private void customerTelTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_customerTelTxtActionPerformed
         itemTabel.requestFocus();
     }//GEN-LAST:event_customerTelTxtActionPerformed
+
+    private void itemTabelFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_itemTabelFocusLost
+        // TODO add your handling code here:
+    }//GEN-LAST:event_itemTabelFocusLost
+
+    private void itemTabelPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_itemTabelPropertyChange
+  
+    }//GEN-LAST:event_itemTabelPropertyChange
+
+    private void itemTabelVetoableChange(java.beans.PropertyChangeEvent evt)throws java.beans.PropertyVetoException {//GEN-FIRST:event_itemTabelVetoableChange
+
+    }//GEN-LAST:event_itemTabelVetoableChange
 
     /**
      * @param args the command line arguments

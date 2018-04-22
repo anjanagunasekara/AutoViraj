@@ -16,6 +16,7 @@ public class InputOutputForm extends javax.swing.JFrame {
 
     public static String inputFilePath = new java.io.File("Inputs").getAbsolutePath();
     public static String invoiceFilePath = new java.io.File("Invoices").getAbsolutePath();
+    public static String binPath = new java.io.File("bin").getAbsolutePath();
 
     /**
      * Creates new form InputOutputForm

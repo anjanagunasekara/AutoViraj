@@ -55,6 +55,7 @@ public class MainFrame extends javax.swing.JFrame {
         invoiceMenu = new javax.swing.JMenuItem();
         historyMenuItem = new javax.swing.JMenuItem();
         viewMenuItme = new javax.swing.JMenuItem();
+        jCheckBoxMenuItem1 = new javax.swing.JCheckBoxMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new javax.swing.BoxLayout(getContentPane(), javax.swing.BoxLayout.LINE_AXIS));
@@ -93,7 +94,7 @@ public class MainFrame extends javax.swing.JFrame {
         });
         runMenu.add(historyMenuItem);
 
-        viewMenuItme.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_V, java.awt.event.InputEvent.CTRL_MASK));
+        viewMenuItme.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_V, java.awt.event.InputEvent.ALT_MASK | java.awt.event.InputEvent.CTRL_MASK));
         viewMenuItme.setText("View Inventory");
         viewMenuItme.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -101,6 +102,16 @@ public class MainFrame extends javax.swing.JFrame {
             }
         });
         runMenu.add(viewMenuItme);
+
+        jCheckBoxMenuItem1.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_C, java.awt.event.InputEvent.ALT_MASK | java.awt.event.InputEvent.CTRL_MASK));
+        jCheckBoxMenuItem1.setSelected(true);
+        jCheckBoxMenuItem1.setText("View Customers");
+        jCheckBoxMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jCheckBoxMenuItem1ActionPerformed(evt);
+            }
+        });
+        runMenu.add(jCheckBoxMenuItem1);
 
         jMenuBar1.add(runMenu);
 
@@ -134,6 +145,8 @@ public class MainFrame extends javax.swing.JFrame {
             vfr.toFront();
         if(hfr!=null)
             hfr.toFront();
+        if(cfr!=null)
+            cfr.toFront();
         ifr.toFront();
     }//GEN-LAST:event_invoiceMenuActionPerformed
 
@@ -148,6 +161,8 @@ public class MainFrame extends javax.swing.JFrame {
             ifr.toFront();
         if(hfr!=null)
             hfr.toFront();
+        if(cfr!=null)
+            cfr.toFront();
         vfr.toFront();
     }//GEN-LAST:event_viewMenuItmeActionPerformed
 
@@ -162,6 +177,8 @@ public class MainFrame extends javax.swing.JFrame {
             vfr.toFront();
         if(ifr!=null)
             ifr.toFront();
+        if(cfr!=null)
+            cfr.toFront();
         hfr.toFront();
     }//GEN-LAST:event_historyMenuItemActionPerformed
 
@@ -172,11 +189,29 @@ public class MainFrame extends javax.swing.JFrame {
             ifr.toFront();
         if(hfr!=null)
             hfr.toFront();
+        if(cfr!=null)
+            cfr.toFront();
     }//GEN-LAST:event_jLabel1MouseClicked
+
+    private void jCheckBoxMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBoxMenuItem1ActionPerformed
+        if (cfr != null) {
+            cfr.dispose();
+        }
+        cfr = new CustomerForm();
+        cfr.setVisible(true);
+        cfr.setLocationRelativeTo(null);
+        if(vfr != null)
+            vfr.toFront();
+        if(ifr!=null)
+            ifr.toFront();
+        if(hfr!=null)
+            hfr.toFront();
+    }//GEN-LAST:event_jCheckBoxMenuItem1ActionPerformed
 
     InvoiceFrame ifr;
     HistoryForm hfr;
     ViewForm vfr;
+    CustomerForm cfr;
 
     /**
      * @param args the command line arguments
@@ -216,6 +251,7 @@ public class MainFrame extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem historyMenuItem;
     private javax.swing.JMenuItem invoiceMenu;
+    private javax.swing.JCheckBoxMenuItem jCheckBoxMenuItem1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
